@@ -1,5 +1,5 @@
 
-$LOAD_PATH << ".."
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'add_zone'
 
