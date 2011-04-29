@@ -1,8 +1,10 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require 'add_master'
 require 'common'
+require 'add_master'
+
+test_init
 
 describe AddMaster, "when wrong argument of host_names" do
   it { lambda{ AddMaster.new("ns1.example.com",

@@ -136,4 +136,3 @@ EOS
     footer.chomp
   end
 end
-

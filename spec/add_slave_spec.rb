@@ -4,6 +4,8 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'add_slave'
 require 'common'
 
+test_init
+
 describe AddSlave do
   before do
     @manage = AddSlave.new("192.168.0.1")

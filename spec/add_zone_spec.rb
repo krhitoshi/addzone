@@ -4,9 +4,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'common'
 require 'add_zone'
 
-Dir.chdir File.dirname(__FILE__)
-
-FileUtils.copy_file "data/etc/hosting.conf.dist", "data/etc/hosting.conf", true
+test_init
 
 describe AddZone, "When the paths do not exist" do
   before do

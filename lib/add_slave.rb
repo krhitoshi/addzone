@@ -1,5 +1,7 @@
 
+require 'common'
 require 'add_zone'
+test_init
 
 class AddSlave < AddZone
   attr_reader :master_ip
