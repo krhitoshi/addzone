@@ -72,10 +72,10 @@ class AddZone
     backup_dir(@zone_dir)
   end
   def zone_backup_dir_exist?
-    File.exist?(zone_backup_dir)
+    File.directory?(zone_backup_dir)
   end
   def conf_file_dir_exist?
-    File.exist?(conf_file_dir)
+    File.directory?(conf_file_dir)
   end
   def conf_file_path
     File.join [conf_file_dir, @conf_file_name]
@@ -84,7 +84,7 @@ class AddZone
     File.exist?(conf_file_path)
   end
   def conf_backup_dir_exist?
-    File.exist?(conf_backup_dir)
+    File.directory?(conf_backup_dir)
   end
   def str_time
     Time.now.strftime("%Y%m%d%H%M")
@@ -99,7 +99,7 @@ class AddZone
     false
   end
   def zone_dir_exist?
-    File.exist?(zone_dir)
+    File.directory?(zone_dir)
   end
   def zone_file_name(domain)
     domain + ".zone"
