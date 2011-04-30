@@ -13,7 +13,7 @@ describe AddSlave do
   it { @manage.base_zone_file_path("example.com").should == "slave/example.com.zone" }
   it "slave zone conf" do
     conf = <<EOS
-// example.com : 201104251500
+// example.com : 20110425150015
 zone "example.com" {
       type slave;
       masters { 192.168.0.1; };

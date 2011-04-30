@@ -15,6 +15,6 @@ end
 
 class Time
   def Time.now
-    local(2011,4,25,15,00)
+    local(2011,4,25,15,00,15)
   end
 end

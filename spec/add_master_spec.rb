@@ -54,7 +54,7 @@ describe AddMaster do
   }
   it "master zone conf" do
     conf = <<EOS
-// example.com : 201104251500
+// example.com : 20110425150015
 zone "example.com" {
       type master;
       file "master/example.com.zone";
@@ -130,9 +130,9 @@ describe AddMaster, "conf file bakup operation" do
     @manage.conf_file_dir = "data/etc"
     @manage.zone_dir      = "data/master"
   end
-  it { @manage.backup_conf_file.should == "data/etc/backup/hosting.conf.201104251500" }
+  it { @manage.backup_conf_file.should == "data/etc/backup/hosting.conf.20110425150015" }
   after do
-    File.delete "data/etc/backup/hosting.conf.201104251500"
+    File.delete "data/etc/backup/hosting.conf.20110425150015"
   end
 end
 

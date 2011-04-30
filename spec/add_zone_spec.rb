@@ -40,7 +40,7 @@ describe AddZone, "When the paths exist" do
   it { lambda{ @manage.backup_conf_file }.should_not raise_error }
   it { @manage.zone_dir.should == "data/master" }
   it { @manage.zone_backup_dir.should == "data/master/backup" }
-  it { @manage.conf_backup_file_path.should == "data/etc/backup/hosting.conf.201104251500" }
+  it { @manage.conf_backup_file_path.should == "data/etc/backup/hosting.conf.20110425150015" }
 
   it { @manage.should be_conf_file_dir_exist }
   it { @manage.should be_conf_file_exist }
@@ -80,14 +80,14 @@ describe AddZone, "When conf_file_name is specified" do
   it { @manage.conf_file_path.should ==
     "/var/named/chroot/etc/virtual.conf" }
   it { @manage.conf_backup_file_path.should ==
-    "/var/named/chroot/etc/backup/virtual.conf.201104251500" }
+    "/var/named/chroot/etc/backup/virtual.conf.20110425150015" }
 end
 
 describe AddZone, "Simple methods" do
   before do
     @manage = AddZone.new
   end
-  it { @manage.str_time.should == "201104251500" }
+  it { @manage.str_time.should == "20110425150015" }
   it { @manage.backup_dir("data").should == "data/backup" }
   it { @manage.zone_file_name("example.com").should == "example.com.zone" }
   it { @manage.base_zone_file_path("example.com").should ==
@@ -111,7 +111,7 @@ describe AddZone, "When no condition is specified" do
   it { @manage.zone_base.should == "base" }
   it { @manage.conf_file_name.should == "hosting.conf" }
   it { @manage.conf_backup_file_path.should ==
-    "/var/named/chroot/etc/backup/hosting.conf.201104251500" }
+    "/var/named/chroot/etc/backup/hosting.conf.20110425150015" }
   it { @manage.conf_file_path.should ==
     "/var/named/chroot/etc/hosting.conf" }
   it { @manage.conf_backup_dir.should == "/var/named/chroot/etc/backup" }
@@ -124,7 +124,7 @@ describe AddZone, "When no condition is specified" do
     "base/example.com.zone" }
   it {
     header = <<EOS
-// example.com : 201104251500
+// example.com : 20110425150015
 zone "example.com" {
       type base;
 EOS

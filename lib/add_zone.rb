@@ -87,7 +87,7 @@ class AddZone
     File.directory?(conf_backup_dir)
   end
   def str_time
-    Time.now.strftime("%Y%m%d%H%M")
+    Time.now.strftime("%Y%m%d%H%M%S")
   end
   def conf_backup_file_path
     File.join [conf_backup_dir, @conf_file_name + "." + str_time]
