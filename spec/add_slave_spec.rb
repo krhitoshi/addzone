@@ -1,8 +1,5 @@
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require 'add_slave'
-require 'common'
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 test_init
 
