@@ -31,8 +31,10 @@ describe AddZone, "When the paths exist" do
     @manage = AddZone.new
     @manage.conf_file_dir = "data/etc"
     @manage.zone_dir      = "data/master"
-    File.delete "data/etc/hosting.conf"
-    FileUtils.copy_file "data/etc/hosting.conf.dist", "data/etc/hosting.conf", true
+    clear_files
+  end
+  after :all do
+    clear_files
   end
   it { @manage.conf_file_dir.should == "data/etc" }
   it { @manage.conf_file_path.should == "data/etc/hosting.conf" }

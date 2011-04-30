@@ -9,6 +9,10 @@ require 'tmpdir'
 
 def test_init
   Dir.chdir File.dirname(__FILE__)
+  clear_files
+end
+
+def clear_files
   FileUtils.rm(Dir.glob("data/etc/backup/*"))
   FileUtils.rm(Dir.glob("data/master/backup/*"))
   File.delete "data/etc/hosting.conf" if File.exist?("data/etc/hosting.conf")
