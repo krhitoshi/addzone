@@ -7,13 +7,13 @@ require 'add_slave'
 
 require 'tmpdir'
 
-TMPDIR = "#{Dir.tmpdir}/addzone"
+TMP_DIR = "#{Dir.tmpdir}/addzone"
 DATA_DIR = File.join File.expand_path(File.dirname(__FILE__)), "data"
 
 def test_init
   prepare_data_files
   $PREV_DIR = Dir.pwd
-  Dir.chdir TMPDIR
+  Dir.chdir TMP_DIR
 end
 
 def test_end
@@ -22,22 +22,22 @@ def test_end
 end
 
 def prepare_data_files
-  FileUtils.rm_rf TMPDIR if File.directory? TMPDIR
-  Dir.mkdir TMPDIR
-  Dir.mkdir File.join TMPDIR, "etc"
-  Dir.mkdir File.join TMPDIR, "etc", "backup"
-  Dir.mkdir File.join TMPDIR, "master"
-  Dir.mkdir File.join TMPDIR, "master", "backup"
-  Dir.mkdir File.join TMPDIR, "slave"
-  Dir.mkdir File.join TMPDIR, "slave", "backup"
+  FileUtils.rm_rf TMP_DIR if File.directory? TMP_DIR
+  Dir.mkdir TMP_DIR
+  Dir.mkdir File.join TMP_DIR, "etc"
+  Dir.mkdir File.join TMP_DIR, "etc", "backup"
+  Dir.mkdir File.join TMP_DIR, "master"
+  Dir.mkdir File.join TMP_DIR, "master", "backup"
+  Dir.mkdir File.join TMP_DIR, "slave"
+  Dir.mkdir File.join TMP_DIR, "slave", "backup"
   FileUtils.copy_file File.join(DATA_DIR, "/etc/hosting.conf.dist"),
-  File.join(TMPDIR, "etc", "hosting.conf"), true
+  File.join(TMP_DIR, "etc", "hosting.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "/master/example.jp.zone"),
-  File.join(TMPDIR, "master", "example.jp.zone"), true
+  File.join(TMP_DIR, "master", "example.jp.zone"), true
 end
 
 def remove_data_files
-  FileUtils.rm_rf TMPDIR
+  FileUtils.rm_rf TMP_DIR
 end
 
 def clear_files
