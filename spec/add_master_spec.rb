@@ -103,13 +103,18 @@ describe AddMaster, "when the paths not exist" do
 end
 
 describe AddMaster, "add zone into config operation" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
                                    "192.168.10.1")
-    @manage.conf_file_dir = "data/etc"
-    @manage.zone_dir      = "data/master"
-    File.delete "data/etc/hosting.conf"
-    FileUtils.copy_file "data/etc/hosting.conf.dist", "data/etc/hosting.conf", true
+    @manage.conf_file_dir = "etc"
+    @manage.zone_dir      = "master"
+    clear_files
   end
   it { lambda{ @manage.condition_check}.should_not raise_error }
   it { lambda{ @manage.add_zone_conf("example.com") }.should_not raise_error }
@@ -117,53 +122,62 @@ describe AddMaster, "add zone into config operation" do
     @manage.add_zone_conf("example.com").should == "example.com"
     lambda{ @manage.add_zone_conf("example.com") }.should raise_error
   }
-  after do
-    File.delete "data/etc/hosting.conf"
-    FileUtils.copy_file "data/etc/hosting.conf.dist", "data/etc/hosting.conf", true
-  end
 end
 
 describe AddMaster, "conf file bakup operation" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
                                    "192.168.10.1")
-    @manage.conf_file_dir = "data/etc"
-    @manage.zone_dir      = "data/master"
+    @manage.conf_file_dir = "etc"
+    @manage.zone_dir      = "master"
+  puts "clear: " + Dir.pwd
   end
-  it { @manage.backup_conf_file.should == "data/etc/backup/hosting.conf.20110425150015" }
-  after do
-    File.delete "data/etc/backup/hosting.conf.20110425150015"
-  end
+  it { @manage.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
 end
 
 describe AddMaster, "zone creation operation" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
                                    "192.168.10.1")
-    @manage.conf_file_dir = "data/etc"
-    @manage.zone_dir      = "data/master"
+    @manage.conf_file_dir = "etc"
+    @manage.zone_dir      = "master"
     @manage.bind_user = "hitoshi"
     @manage.bind_group = "staff"
   end
   it{
     lambda{ @manage.create_zone_file("example.com") }.should_not raise_error
-    File.should be_exist("data/master/example.com.zone")
+    File.should be_exist("master/example.com.zone")
     lambda{ @manage.zone_file_check("example.com") }.should_not raise_error
     lambda{ @manage.delete_zone_file("example.com") }.should_not raise_error
-    File.should_not be_exist("data/master/example.com.zone")
+    File.should_not be_exist("master/example.com.zone")
   }
-  it { @manage.create_zone_file("example.com").should == "data/master/example.com.zone" }
+  it { @manage.create_zone_file("example.com").should == "master/example.com.zone" }
   it {
     @manage.create_zone_file("example.com")
     lambda{ @manage.create_zone_file("example.com") }.should raise_error
-    @manage.delete_zone_file("example.com").should == "data/master/example.com.zone"
+    @manage.delete_zone_file("example.com").should == "master/example.com.zone"
   }
   it {
     lambda{ @manage.delete_zone_file("example.com") }.should raise_error
   }
   after do
-    if File.exist? "data/master/example.com.zone"
-      File.delete "data/master/example.com.zone"
+    if File.exist? "master/example.com.zone"
+      File.delete "master/example.com.zone"
     end
   end
 end
+
+test_end
+

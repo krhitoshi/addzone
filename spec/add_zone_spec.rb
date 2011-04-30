@@ -1,8 +1,6 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-test_init
-
 describe AddZone, "When the paths do not exist" do
   before do
     @manage = AddZone.new
@@ -27,22 +25,25 @@ describe AddZone, "When the paths do not exist" do
 end
 
 describe AddZone, "When the paths exist" do
-  before do
-    @manage = AddZone.new
-    @manage.conf_file_dir = "data/etc"
-    @manage.zone_dir      = "data/master"
-    clear_files
+  before :all do
+    test_init
   end
   after :all do
+    test_end
+  end
+  before do
+    @manage = AddZone.new
+    @manage.conf_file_dir = "etc"
+    @manage.zone_dir      = "master"
     clear_files
   end
-  it { @manage.conf_file_dir.should == "data/etc" }
-  it { @manage.conf_file_path.should == "data/etc/hosting.conf" }
-  it { @manage.conf_backup_dir.should == "data/etc/backup" }
+  it { @manage.conf_file_dir.should == "etc" }
+  it { @manage.conf_file_path.should == "etc/hosting.conf" }
+  it { @manage.conf_backup_dir.should == "etc/backup" }
   it { lambda{ @manage.backup_conf_file }.should_not raise_error }
-  it { @manage.zone_dir.should == "data/master" }
-  it { @manage.zone_backup_dir.should == "data/master/backup" }
-  it { @manage.conf_backup_file_path.should == "data/etc/backup/hosting.conf.20110425150015" }
+  it { @manage.zone_dir.should == "master" }
+  it { @manage.zone_backup_dir.should == "master/backup" }
+  it { @manage.conf_backup_file_path.should == "etc/backup/hosting.conf.20110425150015" }
 
   it { @manage.should be_conf_file_dir_exist }
   it { @manage.should be_conf_file_exist }

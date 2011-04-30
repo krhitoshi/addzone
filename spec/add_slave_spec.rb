@@ -24,3 +24,5 @@ EOS
     @manage.zone_conf("example.com").should == conf
   end
 end
+
+test_end
