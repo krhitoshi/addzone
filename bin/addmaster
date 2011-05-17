@@ -15,9 +15,14 @@ SSH_PORT = 10022
 begin
   manage = AddMaster.new(HOSTS, IP_ADDRESS)
   manage.email = "root@example.com"
+  manage.conf_file_name = "hosting.conf"
   manage.zone_base = "master" # default "master"
-  manage.zone_dir = "spec/data/master"
+#  manage.conf_file_dir = "/var/named/chroot/etc"
+#  manage.zone_dir = "/var/named/chroot/var/named/master"
   manage.conf_file_dir = "spec/data/etc"
+  manage.zone_dir = "spec/data/master"
+#  manage.bind_user = "named" # "named"
+#  manage.bind_group = "named"  # "named"
   manage.bind_user = "hitoshi" # "named"
   manage.bind_group = "staff"  # "named"
 
