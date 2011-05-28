@@ -3,17 +3,27 @@ require 'fileutils'
 
 class AddZone
   attr_accessor :conf_file_dir, :conf_file_name, :zone_dir, :zone_base
+  attr_reader :addzone_conf
 
-  def initialize
+  def initialize(addzone_conf = nil)
     chroot_dir = "/var/named/chroot"
     @conf_file_name = "hosting.conf"
     @conf_file_dir = File.join [chroot_dir , "etc"]
     @zone_dir = File.join [chroot_dir , "var", "named", type]
     @zone_base = type
+    addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
+  end
+  def load_addzone_conf
+    addzone_conf_check
   end
   def condition_check
     conf_file_check
     conf_backup_dir_check
+  end
+  def addzone_conf_check
+    unless File.exist? @addzone_conf
+      raise "Configure File of AddMaster or AddSlave Not Foud: " + @addzone_conf
+    end
   end
   def conf_file_dir_check
     unless conf_file_dir_exist?

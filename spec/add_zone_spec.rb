@@ -110,6 +110,7 @@ describe AddZone, "When no condition is specified" do
   before do
     @manage = AddZone.new
   end
+  it { @manage.addzone_conf.should == "/etc/addzone.conf" }
   it { @manage.type.should == "base" }
   it { @manage.zone_base.should == "base" }
   it { @manage.conf_file_name.should == "hosting.conf" }
@@ -140,4 +141,20 @@ EOS
 EOS
     @manage.zone_footer("example.com").should == footer.chomp
   }
+end
+
+describe AddZone, "Load config file" do
+  before do
+    @manage = AddZone.new("spec/fixtures")
+  end
+  it { lambda{ @manage.addzone_conf_check }.should_not raise_error }
+  it { lambda{ @manage.load_addzone_conf }.should_not raise_error }
+end
+
+describe AddZone, "Load wrong config file" do
+  before do
+    @manage = AddZone.new("not_exist.conf")
+  end
+  it { lambda{ @manage.addzone_conf_check }.should raise_error }
+  it { lambda{ @manage.load_addzone_conf }.should raise_error }
 end
