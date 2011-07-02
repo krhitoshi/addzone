@@ -14,8 +14,8 @@ describe AddMaster do
 
   it { @manage.host_names.should == ["ns1.example.com", "ns2.example.com"] }
   it { @manage.ip_address.should == "192.168.10.5" }
-  it { @manage.bind_user.should == "named" }
-  it { @manage.bind_group.should == "named" }
+  it { @manage.bind_user.should == "hitoshi" }
+  it { @manage.bind_group.should == "staff" }
   it { @manage.type.should == "master" }
   it { @manage.base_zone_file_path("example.com").should == "master/example.com.zone" }
   it { @manage.email.should == "root.example.com" }
@@ -136,8 +136,6 @@ describe AddMaster, "zone creation operation" do
   end
   before do
     @manage = AddMaster.new("etc/addzone.conf")
-    @manage.bind_user = "hitoshi"
-    @manage.bind_group = "staff"
   end
   it { @manage.should be_zone_dir_exist }
   it { @manage.should_not be_zone_file_exist("example.com") }

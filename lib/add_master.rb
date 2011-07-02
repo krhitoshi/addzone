@@ -2,14 +2,14 @@
 require 'add_zone'
 
 class AddMaster < AddZone
-  attr_accessor :spf_include, :bind_user, :bind_group
-  attr_reader :host_names, :email, :ip_address
+  attr_accessor :spf_include
+  attr_reader :host_names, :email, :ip_address, :bind_user, :bind_group
 
   def initialize(addzone_conf = nil)
+    @bind_user = @bind_group = "named"
     super(addzone_conf)
     raise "host_names should be more than two" unless @host_names.size >= 2
     @spf_include = nil
-    @bind_user = @bind_group = "named"
   end
   def type
     "master"
@@ -87,5 +87,7 @@ EOS
     @host_names = yaml['name_servers']
     @email = yaml['email'].gsub(/@/, '.')
     @zone_dir = yaml['zone_dir']
+    @bind_user = yaml['bind_user']
+    @bind_group = yaml['bind_group']
   end
 end
