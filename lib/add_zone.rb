@@ -37,35 +37,14 @@ class AddZone
   def zone_backup_dir
     backup_dir(@zone_dir)
   end
-  def zone_backup_dir_exist?
-    File.directory?(zone_backup_dir)
-  end
-  def conf_file_dir_exist?
-    File.directory?(@conf_file_dir)
-  end
   def conf_file_path
     File.join [@conf_file_dir, @conf_file_name]
-  end
-  def conf_file_exist?
-    File.exist?(conf_file_path)
-  end
-  def conf_backup_dir_exist?
-    File.directory?(conf_backup_dir)
   end
   def str_time
     Time.now.strftime("%Y%m%d%H%M%S")
   end
   def conf_backup_file_path
     File.join [conf_backup_dir, @conf_file_name + "." + str_time]
-  end
-  def zone_exist?(domain)
-    open(conf_file_path).each do |line|
-      return true if line =~ /zone\s+"#{domain}"/
-    end
-    false
-  end
-  def zone_dir_exist?
-    File.directory?(zone_dir)
   end
   def zone_file_name(domain)
     domain + ".zone"
@@ -149,5 +128,26 @@ EOS
     unless conf_backup_dir_exist?
       raise "Configure Backup Directory Not Found: " + conf_backup_dir
     end
+  end
+  def zone_backup_dir_exist?
+    File.directory?(zone_backup_dir)
+  end
+  def conf_file_dir_exist?
+    File.directory?(@conf_file_dir)
+  end
+  def conf_file_exist?
+    File.exist?(conf_file_path)
+  end
+  def conf_backup_dir_exist?
+    File.directory?(conf_backup_dir)
+  end
+  def zone_exist?(domain)
+    open(conf_file_path).each do |line|
+      return true if line =~ /zone\s+"#{domain}"/
+    end
+    false
+  end
+  def zone_dir_exist?
+    File.directory?(zone_dir)
   end
 end
