@@ -100,6 +100,34 @@ describe AddZone, "When zone_base is specified" do
     "new_base/example.com.zone" }
 end
 
+describe AddZone, "各種存在しないファイルパスが指定されている場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_zone = AddZone.new("etc/addzone_not_exist.conf")
+    @add_zone.zone_dir      = "not_exist_path"
+  end
+  it { @add_zone.should_not be_conf_file_dir_exist }
+  it { @add_zone.should_not be_conf_file_exist }
+  it { @add_zone.should_not be_conf_backup_dir_exist }
+  it { lambda{ @add_zone.backup_conf_file }.should raise_error }
+  it { @add_zone.should_not be_zone_dir_exist }
+  it { @add_zone.should_not be_zone_file_exist("example.com") }
+  it { @add_zone.should_not be_zone_backup_dir_exist }
+  
+  it { lambda{ @add_zone.condition_check}.should raise_error }
+  it { lambda{ @add_zone.conf_file_dir_check}.should raise_error }
+  it { lambda{ @add_zone.conf_file_check }.should raise_error }
+  it { lambda{ @add_zone.conf_backup_dir_check }.should raise_error }
+  
+  it { lambda{ @add_zone.zone_dir_check }.should raise_error }
+  it { lambda{ @add_zone.zone_backup_dir_check }.should raise_error }
+end
+
 describe AddZone, "正常なコンフィグファイルの読み込み" do
   before :all do
     test_init

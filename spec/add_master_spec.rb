@@ -81,7 +81,7 @@ end
 describe AddMaster, "when the paths not exist" do
   before do
     @manage = AddMaster.new("etc/addzone_not_exist.conf")
-    @manage.zone_dir      = "not_exist_path"
+    @manage.zone_dir = "not_exist_path"
   end
   before :all do
     test_init
