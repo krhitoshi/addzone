@@ -8,7 +8,6 @@ class AddZone
   def initialize(addzone_conf = nil)
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
     load_addzone_conf
-    @conf_file_name = "hosting.conf"
     @conf_file_dir = File.join [root_dir , "etc"]
     @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
@@ -144,6 +143,7 @@ EOS
     yaml = YAML.load_file(@addzone_conf)
     @root_dir = yaml['base']['root_dir']
     @conf_file_dir = yaml['base']['conf_file_dir']
+    @conf_file_name = yaml['base']['conf_file_name']
     yaml
   end
   def addzone_conf_check
