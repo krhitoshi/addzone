@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe AddMaster do
   before do
-    @manage = AddMaster.new('etc/addzone.conf')
+    @add_master = AddMaster.new('etc/addzone.conf')
   end
   before :all do
     test_init
@@ -12,33 +12,33 @@ describe AddMaster do
     test_end
   end
 
-  it { @manage.host_names.should == ["ns1.example.com", "ns2.example.com"] }
-  it { @manage.ip_address.should == "192.168.10.5" }
-  it { @manage.bind_user.should == "hitoshi" }
-  it { @manage.bind_group.should == "staff" }
-  it { @manage.type.should == "master" }
-  it { @manage.base_zone_file_path("example.com").should == "master/example.com.zone" }
-  it { @manage.email.should == "root.example.com" }
-  it { @manage.serial.should == "2011042501" }
-  it { @manage.zone_dir.should == "master" }
+  it { @add_master.host_names.should == ["ns1.example.com", "ns2.example.com"] }
+  it { @add_master.ip_address.should == "192.168.10.5" }
+  it { @add_master.bind_user.should == "hitoshi" }
+  it { @add_master.bind_group.should == "staff" }
+  it { @add_master.type.should == "master" }
+  it { @add_master.base_zone_file_path("example.com").should == "master/example.com.zone" }
+  it { @add_master.email.should == "root.example.com" }
+  it { @add_master.serial.should == "2011042501" }
+  it { @add_master.zone_dir.should == "master" }
   it "spf_include and zone_TXT" do
-    @manage.spf_include.should be_nil
-    @manage.zone_TXT.should == %Q!        IN TXT   "v=spf1 mx ~all"!
-    lambda{ @manage.spf_include = "spf.example.com" }.should_not raise_error
+    @add_master.spf_include.should be_nil
+    @add_master.zone_TXT.should == %Q!        IN TXT   "v=spf1 mx ~all"!
+    lambda{ @add_master.spf_include = "spf.example.com" }.should_not raise_error
 
-    @manage.spf_include.should == "spf.example.com"
+    @add_master.spf_include.should == "spf.example.com"
   end
   it {
-    @manage.zone_SOA.should ==
+    @add_master.zone_SOA.should ==
     "@       IN SOA ns1.example.com. root.example.com.("
   }
   it "zone_SOA with email" do
-    @manage.email = "root@example.com"
-    @manage.zone_SOA.should ==
+    @add_master.email = "root@example.com"
+    @add_master.zone_SOA.should ==
       "@       IN SOA ns1.example.com. root.example.com.("
   end
   it {
-    @manage.zone_NS.should ==
+    @add_master.zone_NS.should ==
     "        IN NS    ns1.example.com.\n        IN NS    ns2.example.com."
   }
   it "master zone conf" do
@@ -49,8 +49,8 @@ zone "example.com" {
       file "master/example.com.zone";
 };
 EOS
-    #puts @manage.zone_conf("example.com")
-    @manage.zone_conf("example.com").should == conf
+    #puts @add_master.zone_conf("example.com")
+    @add_master.zone_conf("example.com").should == conf
   end
   it "zone contents" do
     zone = <<EOS
@@ -72,15 +72,15 @@ ftp     IN CNAME www
 pop     IN CNAME mail
 smtp    IN CNAME mail
 EOS
-    @manage.email = "root@example.com"
-    #puts @manage.zone("example.com")
-    @manage.zone("example.com").should == zone
+    @add_master.email = "root@example.com"
+    #puts @add_master.zone("example.com")
+    @add_master.zone("example.com").should == zone
   end
 end
 
 describe AddMaster, "when the paths not exist" do
   before do
-    @manage = AddMaster.new("etc/addzone_not_exist.conf")
+    @add_master = AddMaster.new("etc/addzone_not_exist.conf")
   end
   before :all do
     test_init
@@ -88,10 +88,10 @@ describe AddMaster, "when the paths not exist" do
   after :all do
     test_end
   end
-  it { lambda{ @manage.condition_check}.should raise_error }
-  it { lambda{ @manage.create_zone_file("example.com") }.should raise_error }
-  it { lambda{ @manage.delete_zone_file("example.com") }.should raise_error }
-  it { lambda{ @manage.add_zone_conf("example.com") }.should raise_error }
+  it { lambda{ @add_master.condition_check}.should raise_error }
+  it { lambda{ @add_master.create_zone_file("example.com") }.should raise_error }
+  it { lambda{ @add_master.delete_zone_file("example.com") }.should raise_error }
+  it { lambda{ @add_master.add_zone_conf("example.com") }.should raise_error }
 end
 
 describe AddMaster, "add zone into config operation" do
@@ -102,14 +102,14 @@ describe AddMaster, "add zone into config operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new("etc/addzone.conf")
+    @add_master = AddMaster.new("etc/addzone.conf")
     clear_files
   end
-  it { lambda{ @manage.condition_check}.should_not raise_error }
-  it { lambda{ @manage.add_zone_conf("example.com") }.should_not raise_error }
+  it { lambda{ @add_master.condition_check}.should_not raise_error }
+  it { lambda{ @add_master.add_zone_conf("example.com") }.should_not raise_error }
   it {
-    @manage.add_zone_conf("example.com").should == "example.com"
-    lambda{ @manage.add_zone_conf("example.com") }.should raise_error
+    @add_master.add_zone_conf("example.com").should == "example.com"
+    lambda{ @add_master.add_zone_conf("example.com") }.should raise_error
   }
 end
 
@@ -121,10 +121,10 @@ describe AddMaster, "conf file bakup operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new("etc/addzone.conf")
+    @add_master = AddMaster.new("etc/addzone.conf")
   puts "clear: " + Dir.pwd
   end
-  it { @manage.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
+  it { @add_master.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
 end
 
 describe AddMaster, "zone creation operation" do
@@ -135,27 +135,27 @@ describe AddMaster, "zone creation operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new("etc/addzone.conf")
+    @add_master = AddMaster.new("etc/addzone.conf")
   end
-  it { @manage.should be_zone_dir_exist }
-  it { @manage.should_not be_zone_file_exist("example.com") }
-  it { @manage.should be_zone_file_exist("example.jp") }
-  it { @manage.should be_zone_backup_dir_exist }
+  it { @add_master.should be_zone_dir_exist }
+  it { @add_master.should_not be_zone_file_exist("example.com") }
+  it { @add_master.should be_zone_file_exist("example.jp") }
+  it { @add_master.should be_zone_backup_dir_exist }
 
   it{
-    lambda{ @manage.create_zone_file("example.com") }.should_not raise_error
+    lambda{ @add_master.create_zone_file("example.com") }.should_not raise_error
     File.should be_exist("master/example.com.zone")
-    lambda{ @manage.delete_zone_file("example.com") }.should_not raise_error
+    lambda{ @add_master.delete_zone_file("example.com") }.should_not raise_error
     File.should_not be_exist("master/example.com.zone")
   }
-  it { @manage.create_zone_file("example.com").should == "master/example.com.zone" }
+  it { @add_master.create_zone_file("example.com").should == "master/example.com.zone" }
   it {
-    @manage.create_zone_file("example.com")
-    lambda{ @manage.create_zone_file("example.com") }.should raise_error
-    @manage.delete_zone_file("example.com").should == "master/example.com.zone"
+    @add_master.create_zone_file("example.com")
+    lambda{ @add_master.create_zone_file("example.com") }.should raise_error
+    @add_master.delete_zone_file("example.com").should == "master/example.com.zone"
   }
   it {
-    lambda{ @manage.delete_zone_file("example.com") }.should raise_error
+    lambda{ @add_master.delete_zone_file("example.com") }.should raise_error
   }
   after do
     if File.exist? "master/example.com.zone"
