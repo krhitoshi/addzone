@@ -24,8 +24,6 @@ begin
     end
 
   manage.conf_file_name = "hosting.conf"
-#  manage.conf_file_dir = "/var/named/chroot/etc"
-  manage.conf_file_dir = "spec/data/etc"
   manage.zone_base = "slave"
 
   puts "Domain   : #{domain}"
