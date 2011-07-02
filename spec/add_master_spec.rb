@@ -1,12 +1,17 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-test_init
-
 describe AddMaster do
   before do
     @manage = AddMaster.new('etc/addzone.conf')
   end
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+
   it { @manage.host_names.should == ["ns1.example.com", "ns2.example.com"] }
   it { @manage.ip_address.should == "192.168.10.5" }
   it { @manage.bind_user.should == "named" }
@@ -74,10 +79,15 @@ EOS
 end
 
 describe AddMaster, "when the paths not exist" do
-  pending
   before do
-    @manage = AddMaster.new("etc/addzone.conf")
+    @manage = AddMaster.new("etc/addzone_not_exist.conf")
     @manage.zone_dir      = "not_exist_path"
+  end
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
   end
   it { lambda{ @manage.condition_check}.should raise_error }
   it { lambda{ @manage.create_zone_file("example.com") }.should raise_error }
@@ -155,6 +165,4 @@ describe AddMaster, "zone creation operation" do
     end
   end
 end
-
-test_end
 

@@ -4,6 +4,12 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 test_init
 
 describe AddSlave do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @manage = AddSlave.new("etc/addzone.conf")
   end

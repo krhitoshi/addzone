@@ -143,7 +143,6 @@ EOS
   def load_addzone_conf
     addzone_conf_check
     yaml = YAML.load_file(@addzone_conf)
-    p yaml
     @conf_file_dir = yaml['base']['conf_file_dir']
     yaml
   end

@@ -51,6 +51,12 @@ describe AddZone, "When the paths exist" do
 end
 
 describe AddZone, "When conf_file_name is specified" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
     @add_zone.conf_file_name = "virtual.conf"
@@ -63,6 +69,12 @@ describe AddZone, "When conf_file_name is specified" do
 end
 
 describe AddZone, "Simple methods" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
   end
@@ -74,6 +86,12 @@ describe AddZone, "Simple methods" do
 end
 
 describe AddZone, "When zone_base is specified" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
     @add_zone.zone_base = "new_base"
@@ -83,6 +101,12 @@ describe AddZone, "When zone_base is specified" do
 end
 
 describe AddZone, "正常なコンフィグファイルの読み込み" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
   end

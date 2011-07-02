@@ -32,6 +32,8 @@ def prepare_data_files
   Dir.mkdir File.join TMP_DIR, "slave", "backup"
   FileUtils.copy_file File.join(DATA_DIR, "addzone.conf"),
   File.join(TMP_DIR, "etc", "addzone.conf"), true
+  FileUtils.copy_file File.join(DATA_DIR, "addzone_not_exist.conf"),
+  File.join(TMP_DIR, "etc", "addzone_not_exist.conf"), true
    FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   File.join(TMP_DIR, "etc", "hosting.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
