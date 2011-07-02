@@ -3,7 +3,7 @@ require 'yaml'
 
 class AddZone
   attr_accessor :conf_file_name, :zone_base
-  attr_reader :addzone_conf, :root_dir, :zone_dir
+  attr_reader :addzone_conf, :zone_dir
 
   def initialize(addzone_conf = nil)
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
@@ -85,7 +85,6 @@ EOS
   def load_addzone_conf
     addzone_conf_check
     yaml = YAML.load_file(@addzone_conf)
-    @root_dir = yaml['base']['root_dir']
     @conf_file_dir = yaml['base']['conf_file_dir']
     @conf_file_name = yaml['base']['conf_file_name']
     @zone_dir = type

@@ -112,25 +112,6 @@ describe AddZone, "各種存在しないファイルパスが指定されてい�
   it { lambda{ @add_zone.zone_backup_dir_check }.should raise_error }
 end
 
-describe AddZone, "正常なコンフィグファイルの読み込み" do
-  before :all do
-    test_init
-  end
-  after :all do
-    test_end
-  end
-  before do
-    @add_zone = AddZone.new("etc/addzone.conf")
-  end
-  it "コンストラクタでコンフィグファイルを指定できる" do
-    @add_zone.addzone_conf.should == "etc/addzone.conf"
-  end
-  it "root_dir" do
-    @add_zone.root_dir.should == "."
-  end
-
-end
-
 describe AddZone, "存在しないコンフィグファイル" do
   before do
   end
