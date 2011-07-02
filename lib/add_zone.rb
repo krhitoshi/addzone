@@ -3,13 +3,13 @@ require 'fileutils'
 
 class AddZone
   attr_accessor :conf_file_dir, :conf_file_name, :zone_dir, :zone_base
-  attr_reader :addzone_conf
+  attr_reader :addzone_conf, :root_dir
 
   def initialize(addzone_conf = nil)
-    chroot_dir = "/var/named/chroot"
+    @root_dir = "/var/named/chroot"
     @conf_file_name = "hosting.conf"
-    @conf_file_dir = File.join [chroot_dir , "etc"]
-    @zone_dir = File.join [chroot_dir , "var", "named", type]
+    @conf_file_dir = File.join [root_dir , "etc"]
+    @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
   end
