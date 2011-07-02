@@ -8,7 +8,6 @@ class AddZone
   def initialize(addzone_conf = nil)
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
     load_addzone_conf
-    @conf_file_dir = File.join [root_dir , "etc"]
     @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
   end

@@ -127,7 +127,7 @@ describe AddMaster, "conf file bakup operation" do
     @manage.zone_dir      = "master"
   puts "clear: " + Dir.pwd
   end
-  it { @manage.backup_conf_file.should == "./etc/backup/hosting.conf.20110425150015" }
+  it { @manage.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
 end
 
 describe AddMaster, "zone creation operation" do
