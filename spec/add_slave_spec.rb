@@ -15,7 +15,7 @@ describe AddSlave do
   end
   it { @manage.master_ip.should == "192.168.1.1" }
   it { @manage.type.should == "slave" }
-  it { @manage.zone_dir.should == "/var/named/chroot/var/named/slave" }
+  it { @manage.zone_dir.should == "./var/named/slave" }
   it { @manage.base_zone_file_path("example.com").should == "slave/example.com.zone" }
   it "slave zone conf" do
     conf = <<EOS

@@ -20,7 +20,7 @@ describe AddMaster do
   it { @manage.base_zone_file_path("example.com").should == "master/example.com.zone" }
   it { @manage.email.should == "root.example.com" }
   it { @manage.serial.should == "2011042501" }
-  it { @manage.zone_dir.should == "/var/named/chroot/var/named/master" }
+  it { @manage.zone_dir.should == "./var/named/master" }
   it "spf_include and zone_TXT" do
     @manage.spf_include.should be_nil
     @manage.zone_TXT.should == %Q!        IN TXT   "v=spf1 mx ~all"!
@@ -127,7 +127,7 @@ describe AddMaster, "conf file bakup operation" do
     @manage.zone_dir      = "master"
   puts "clear: " + Dir.pwd
   end
-  it { @manage.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
+  it { @manage.backup_conf_file.should == "./etc/backup/hosting.conf.20110425150015" }
 end
 
 describe AddMaster, "zone creation operation" do

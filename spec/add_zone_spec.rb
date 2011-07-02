@@ -14,12 +14,12 @@ describe AddZone, "When the paths exist" do
     @add_zone.zone_dir      = "master"
     clear_files
   end
-  it { @add_zone.conf_file_path.should == "etc/hosting.conf" }
-  it { @add_zone.conf_backup_dir.should == "etc/backup" }
+  it { @add_zone.conf_file_path.should == "./etc/hosting.conf" }
+  it { @add_zone.conf_backup_dir.should == "./etc/backup" }
   it { lambda{ @add_zone.backup_conf_file }.should_not raise_error }
   it { @add_zone.zone_dir.should == "master" }
   it { @add_zone.zone_backup_dir.should == "master/backup" }
-  it { @add_zone.conf_backup_file_path.should == "etc/backup/hosting.conf.20110425150015" }
+  it { @add_zone.conf_backup_file_path.should == "./etc/backup/hosting.conf.20110425150015" }
 
   it { @add_zone.should be_conf_file_dir_exist }
   it { @add_zone.should be_conf_file_exist }
@@ -63,9 +63,9 @@ describe AddZone, "When conf_file_name is specified" do
   end
   it { @add_zone.conf_file_name.should == "virtual.conf" }
   it { @add_zone.conf_file_path.should ==
-    "etc/virtual.conf" }
+    "./etc/virtual.conf" }
   it { @add_zone.conf_backup_file_path.should ==
-    "etc/backup/virtual.conf.20110425150015" }
+    "./etc/backup/virtual.conf.20110425150015" }
 end
 
 describe AddZone, "Simple methods" do
@@ -142,7 +142,7 @@ describe AddZone, "正常なコンフィグファイルの読み込み" do
     @add_zone.addzone_conf.should == "etc/addzone.conf"
   end
   it "root_dir" do
-    @add_zone.root_dir.should == "/var/named/chroot"
+    @add_zone.root_dir.should == "."
   end
 
 end

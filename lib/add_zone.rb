@@ -6,13 +6,12 @@ class AddZone
   attr_reader :addzone_conf, :root_dir
 
   def initialize(addzone_conf = nil)
-    @root_dir = "/var/named/chroot"
+    addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
+    load_addzone_conf
     @conf_file_name = "hosting.conf"
     @conf_file_dir = File.join [root_dir , "etc"]
     @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
-    addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
-    load_addzone_conf
   end
   def condition_check
     conf_file_check
@@ -143,6 +142,7 @@ EOS
   def load_addzone_conf
     addzone_conf_check
     yaml = YAML.load_file(@addzone_conf)
+    @root_dir = yaml['base']['root_dir']
     @conf_file_dir = yaml['base']['conf_file_dir']
     yaml
   end
