@@ -11,33 +11,18 @@ describe AddZone, "When the paths exist" do
   end
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
-    @add_zone.zone_dir      = "master"
     clear_files
   end
   it { @add_zone.conf_file_path.should == "etc/hosting.conf" }
   it { @add_zone.conf_backup_dir.should == "etc/backup" }
   it { lambda{ @add_zone.backup_conf_file }.should_not raise_error }
-  it { @add_zone.zone_dir.should == "master" }
-  it { @add_zone.zone_backup_dir.should == "master/backup" }
   it { @add_zone.conf_backup_file_path.should == "etc/backup/hosting.conf.20110425150015" }
 
   it { @add_zone.should be_conf_file_dir_exist }
   it { @add_zone.should be_conf_file_exist }
   it { @add_zone.should be_conf_backup_dir_exist }
 
-  it { @add_zone.should be_zone_dir_exist }
-  it { @add_zone.should_not be_zone_file_exist("example.com") }
-  it { @add_zone.should be_zone_file_exist("example.jp") }
-  it { @add_zone.should be_zone_backup_dir_exist }
-
   it { lambda{ @add_zone.condition_check }.should_not raise_error }
-  it { lambda{ @add_zone.conf_file_dir_check }.should_not raise_error }
-  it { lambda{ @add_zone.conf_file_check }.should_not raise_error }
-  it { lambda{ @add_zone.conf_backup_dir_check }.should_not raise_error }
-
-  it { lambda{ @add_zone.zone_dir_check }.should_not raise_error }
-  it { lambda{ @add_zone.zone_backup_dir_check }.should_not raise_error }
-  it { lambda{ @add_zone.zone_file_check("example.com") }.should raise_error }
 
   it { @add_zone.should_not be_zone_exist("example.com") }
   it { @add_zone.should be_zone_exist("example.jp") }
@@ -109,7 +94,6 @@ describe AddZone, "各種存在しないファイルパスが指定されてい�
   end
   before do
     @add_zone = AddZone.new("etc/addzone_not_exist.conf")
-    @add_zone.zone_dir      = "not_exist_path"
   end
   it { @add_zone.should_not be_conf_file_dir_exist }
   it { @add_zone.should_not be_conf_file_exist }

@@ -21,6 +21,8 @@ EOS
   
   private
   def load_addzone_conf
-    @master_ip = super['addslave']['master_ip']
+    yaml = super['addslave']
+    @master_ip = yaml['master_ip']
+    @zone_dir = yaml['zone_dir']
   end
 end

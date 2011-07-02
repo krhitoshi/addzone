@@ -20,7 +20,7 @@ describe AddMaster do
   it { @manage.base_zone_file_path("example.com").should == "master/example.com.zone" }
   it { @manage.email.should == "root.example.com" }
   it { @manage.serial.should == "2011042501" }
-  it { @manage.zone_dir.should == "./var/named/master" }
+  it { @manage.zone_dir.should == "master" }
   it "spf_include and zone_TXT" do
     @manage.spf_include.should be_nil
     @manage.zone_TXT.should == %Q!        IN TXT   "v=spf1 mx ~all"!
@@ -81,7 +81,6 @@ end
 describe AddMaster, "when the paths not exist" do
   before do
     @manage = AddMaster.new("etc/addzone_not_exist.conf")
-    @manage.zone_dir = "not_exist_path"
   end
   before :all do
     test_init
@@ -104,7 +103,6 @@ describe AddMaster, "add zone into config operation" do
   end
   before do
     @manage = AddMaster.new("etc/addzone.conf")
-    @manage.zone_dir      = "master"
     clear_files
   end
   it { lambda{ @manage.condition_check}.should_not raise_error }
@@ -124,7 +122,6 @@ describe AddMaster, "conf file bakup operation" do
   end
   before do
     @manage = AddMaster.new("etc/addzone.conf")
-    @manage.zone_dir      = "master"
   puts "clear: " + Dir.pwd
   end
   it { @manage.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
@@ -139,14 +136,17 @@ describe AddMaster, "zone creation operation" do
   end
   before do
     @manage = AddMaster.new("etc/addzone.conf")
-    @manage.zone_dir      = "master"
     @manage.bind_user = "hitoshi"
     @manage.bind_group = "staff"
   end
+  it { @manage.should be_zone_dir_exist }
+  it { @manage.should_not be_zone_file_exist("example.com") }
+  it { @manage.should be_zone_file_exist("example.jp") }
+  it { @manage.should be_zone_backup_dir_exist }
+
   it{
     lambda{ @manage.create_zone_file("example.com") }.should_not raise_error
     File.should be_exist("master/example.com.zone")
-    lambda{ @manage.zone_file_check("example.com") }.should_not raise_error
     lambda{ @manage.delete_zone_file("example.com") }.should_not raise_error
     File.should_not be_exist("master/example.com.zone")
   }

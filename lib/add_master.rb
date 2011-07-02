@@ -86,5 +86,6 @@ EOS
     @ip_address = yaml['ip_address']
     @host_names = yaml['name_servers']
     @email = yaml['email'].gsub(/@/, '.')
+    @zone_dir = yaml['zone_dir']
   end
 end

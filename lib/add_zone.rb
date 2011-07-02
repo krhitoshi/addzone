@@ -2,65 +2,31 @@ require 'fileutils'
 require 'yaml'
 
 class AddZone
-  attr_accessor :conf_file_name, :zone_dir, :zone_base
-  attr_reader :addzone_conf, :root_dir
+  attr_accessor :conf_file_name, :zone_base
+  attr_reader :addzone_conf, :root_dir, :zone_dir
 
   def initialize(addzone_conf = nil)
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
     load_addzone_conf
-    @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
   end
   def condition_check
     conf_file_check
     conf_backup_dir_check
   end
-  def conf_file_dir_check
-    unless conf_file_dir_exist?
-      raise "Configure Direcotry Not Found: " + @conf_file_dir
-    end
-  end
-  def conf_file_check
-    conf_file_dir_check
-    unless conf_file_exist?
-      raise "Configure File Not Found: " + conf_file_path
-    end
-  end
-  def conf_backup_dir_check
-    unless conf_backup_dir_exist?
-      raise "Configure Backup Directory Not Found: " + conf_backup_dir
-    end
-  end
   def backup_conf_file
     conf_backup_dir_check
     FileUtils.copy_file(conf_file_path, conf_backup_file_path, true)
     conf_backup_file_path
   end
-  def zone_dir_check
-    unless zone_dir_exist?
-      raise "Zone Directory Not Found: " + zone_dir
-    end
-  end
-  def zone_backup_dir_check
-    zone_dir_check
-    unless zone_backup_dir_exist?
-      raise "Zone Backup Directory Not Found: " + zone_backup_dir
-    end
-  end
-  def zone_file_check(domain)
-    zone_dir_check
-    unless zone_file_exist?(domain)
-      raise "Zone File Not Found: " + zone_file_path(domain)
-    end
+  def type
+    "base"
   end
   def zone_check(domain)
     conf_file_check
     if zone_exist?(domain)
       raise "Already Registered Zone: " + domain
     end
-  end
-  def type
-    "base"
   end
   def backup_dir(base)
     File.join [base, "backup"]
@@ -143,11 +109,45 @@ EOS
     @root_dir = yaml['base']['root_dir']
     @conf_file_dir = yaml['base']['conf_file_dir']
     @conf_file_name = yaml['base']['conf_file_name']
+    @zone_dir = type
     yaml
   end
   def addzone_conf_check
     unless File.exist? @addzone_conf
       raise "Configure File of AddMaster or AddSlave Not Foud: " + @addzone_conf
+    end
+  end
+  def zone_dir_check
+    unless zone_dir_exist?
+      raise "Zone Directory Not Found: " + zone_dir
+    end
+  end
+  def zone_backup_dir_check
+    zone_dir_check
+    unless zone_backup_dir_exist?
+      raise "Zone Backup Directory Not Found: " + zone_backup_dir
+    end
+  end
+  def zone_file_check(domain)
+    zone_dir_check
+    unless zone_file_exist?(domain)
+      raise "Zone File Not Found: " + zone_file_path(domain)
+    end
+  end
+  def conf_file_dir_check
+    unless conf_file_dir_exist?
+      raise "Configure Direcotry Not Found: " + @conf_file_dir
+    end
+  end
+  def conf_file_check
+    conf_file_dir_check
+    unless conf_file_exist?
+      raise "Configure File Not Found: " + conf_file_path
+    end
+  end
+  def conf_backup_dir_check
+    unless conf_backup_dir_exist?
+      raise "Configure Backup Directory Not Found: " + conf_backup_dir
     end
   end
 end
