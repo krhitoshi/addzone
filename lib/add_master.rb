@@ -5,12 +5,9 @@ class AddMaster < AddZone
   attr_accessor :spf_include, :bind_user, :bind_group
   attr_reader :host_names, :email, :ip_address
 
-  def initialize(host_names, ip_address)
-    raise "host_names should be Array" unless host_names.kind_of? Array
-    raise "host_names should be more than two" unless host_names.size >= 2
-    super()
-    @host_names, @ip_address = host_names, ip_address
-    @email = "root." + @host_names[0]
+  def initialize(addzone_conf = nil)
+    super(addzone_conf)
+    raise "host_names should be more than two" unless @host_names.size >= 2
     @spf_include = nil
     @bind_user = @bind_group = "named"
   end
@@ -81,5 +78,13 @@ pop     IN CNAME mail
 smtp    IN CNAME mail
 EOS
     zone
+  end
+
+  private
+  def load_addzone_conf
+    yaml = super['addmaster']
+    @ip_address = yaml['ip_address']
+    @host_names = yaml['name_servers']
+    @email = yaml['email'].gsub(/@/, '.')
   end
 end

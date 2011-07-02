@@ -3,33 +3,17 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 test_init
 
-describe AddMaster, "when wrong argument of host_names" do
-  it { lambda{ AddMaster.new("ns1.example.com",
-                                    "192.168.10.1") }.should raise_error }
-  it { lambda{ AddMaster.new(["ns1.example.com"],
-                                    "192.168.10.1") }.should raise_error }
-end
-
 describe AddMaster do
   before do
-    @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
-                                   "192.168.10.1")
+    @manage = AddMaster.new('etc/addzone.conf')
   end
   it { @manage.host_names.should == ["ns1.example.com", "ns2.example.com"] }
-  it { @manage.ip_address.should == "192.168.10.1" }
+  it { @manage.ip_address.should == "192.168.10.5" }
   it { @manage.bind_user.should == "named" }
   it { @manage.bind_group.should == "named" }
   it { @manage.type.should == "master" }
   it { @manage.base_zone_file_path("example.com").should == "master/example.com.zone" }
-  it { @manage.email.should == "root.ns1.example.com" }
-  it {
-    @manage.email = "root@example.com"
-    @manage.email.should == "root.example.com"
-  }
-  it {
-    @manage.email = "root.example.com"
-    @manage.email.should == "root.example.com"
-  }
+  it { @manage.email.should == "root.example.com" }
   it { @manage.serial.should == "2011042501" }
   it { @manage.zone_dir.should == "/var/named/chroot/var/named/master" }
   it "spf_include and zone_TXT" do
@@ -41,7 +25,7 @@ describe AddMaster do
   end
   it {
     @manage.zone_SOA.should ==
-    "@       IN SOA ns1.example.com. root.ns1.example.com.("
+    "@       IN SOA ns1.example.com. root.example.com.("
   }
   it "zone_SOA with email" do
     @manage.email = "root@example.com"
@@ -76,9 +60,9 @@ $TTL    600
         IN NS    ns2.example.com.
         IN TXT   "v=spf1 mx ~all"
         IN MX 10 mail
-        IN A     192.168.10.1
-www     IN A     192.168.10.1
-mail    IN A     192.168.10.1
+        IN A     192.168.10.5
+www     IN A     192.168.10.5
+mail    IN A     192.168.10.5
 ftp     IN CNAME www
 pop     IN CNAME mail
 smtp    IN CNAME mail
@@ -90,10 +74,9 @@ EOS
 end
 
 describe AddMaster, "when the paths not exist" do
+  pending
   before do
-    @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
-                                   "192.168.10.1")
-    @manage.conf_file_dir = "not_exist_path"
+    @manage = AddMaster.new("etc/addzone.conf")
     @manage.zone_dir      = "not_exist_path"
   end
   it { lambda{ @manage.condition_check}.should raise_error }
@@ -110,9 +93,7 @@ describe AddMaster, "add zone into config operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
-                                   "192.168.10.1")
-    @manage.conf_file_dir = "etc"
+    @manage = AddMaster.new("etc/addzone.conf")
     @manage.zone_dir      = "master"
     clear_files
   end
@@ -132,9 +113,7 @@ describe AddMaster, "conf file bakup operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
-                                   "192.168.10.1")
-    @manage.conf_file_dir = "etc"
+    @manage = AddMaster.new("etc/addzone.conf")
     @manage.zone_dir      = "master"
   puts "clear: " + Dir.pwd
   end
@@ -149,9 +128,7 @@ describe AddMaster, "zone creation operation" do
     test_end
   end
   before do
-    @manage = AddMaster.new(["ns1.example.com", "ns2.example.com"],
-                                   "192.168.10.1")
-    @manage.conf_file_dir = "etc"
+    @manage = AddMaster.new("etc/addzone.conf")
     @manage.zone_dir      = "master"
     @manage.bind_user = "hitoshi"
     @manage.bind_group = "staff"

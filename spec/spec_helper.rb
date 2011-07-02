@@ -30,7 +30,9 @@ def prepare_data_files
   Dir.mkdir File.join TMP_DIR, "master", "backup"
   Dir.mkdir File.join TMP_DIR, "slave"
   Dir.mkdir File.join TMP_DIR, "slave", "backup"
-  FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
+  FileUtils.copy_file File.join(DATA_DIR, "addzone_test.conf"),
+  File.join(TMP_DIR, "etc", "addzone.conf"), true
+   FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   File.join(TMP_DIR, "etc", "hosting.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
   File.join(TMP_DIR, "master", "example.jp.zone"), true
@@ -47,7 +49,6 @@ def clear_files
   FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   "etc/hosting.conf", true
 end
-
 
 class Time
   def Time.now

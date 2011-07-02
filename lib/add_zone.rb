@@ -1,8 +1,8 @@
-
 require 'fileutils'
+require 'yaml'
 
 class AddZone
-  attr_accessor :conf_file_dir, :conf_file_name, :zone_dir, :zone_base
+  attr_accessor :conf_file_name, :zone_dir, :zone_base
   attr_reader :addzone_conf, :root_dir
 
   def initialize(addzone_conf = nil)
@@ -12,6 +12,7 @@ class AddZone
     @zone_dir = File.join [root_dir , "var", "named", type]
     @zone_base = type
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
+    load_addzone_conf
   end
   def condition_check
     conf_file_check
@@ -19,7 +20,7 @@ class AddZone
   end
   def conf_file_dir_check
     unless conf_file_dir_exist?
-      raise "Configure Direcotry Not Found: " + conf_file_dir
+      raise "Configure Direcotry Not Found: " + @conf_file_dir
     end
   end
   def conf_file_check
@@ -77,10 +78,10 @@ class AddZone
     File.directory?(zone_backup_dir)
   end
   def conf_file_dir_exist?
-    File.directory?(conf_file_dir)
+    File.directory?(@conf_file_dir)
   end
   def conf_file_path
-    File.join [conf_file_dir, @conf_file_name]
+    File.join [@conf_file_dir, @conf_file_name]
   end
   def conf_file_exist?
     File.exist?(conf_file_path)
@@ -141,6 +142,10 @@ EOS
   private
   def load_addzone_conf
     addzone_conf_check
+    yaml = YAML.load_file(@addzone_conf)
+    p yaml
+    @conf_file_dir = yaml['base']['conf_file_dir']
+    yaml
   end
   def addzone_conf_check
     unless File.exist? @addzone_conf

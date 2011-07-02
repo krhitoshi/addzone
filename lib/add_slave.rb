@@ -4,9 +4,8 @@ require 'add_zone'
 class AddSlave < AddZone
   attr_reader :master_ip
 
-  def initialize(master_ip)
-    super()
-    @master_ip = master_ip
+  def initialize(addzone_conf = nil)
+    super(addzone_conf)
   end
   def type
     "slave"
@@ -18,5 +17,10 @@ class AddSlave < AddZone
 #{zone_footer(domain)}
 EOS
     conf
+  end
+  
+  private
+  def load_addzone_conf
+    @master_ip = super['addslave']['master_ip']
   end
 end

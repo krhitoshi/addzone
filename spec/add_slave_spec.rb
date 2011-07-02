@@ -5,9 +5,9 @@ test_init
 
 describe AddSlave do
   before do
-    @manage = AddSlave.new("192.168.0.1")
+    @manage = AddSlave.new("etc/addzone.conf")
   end
-  it { @manage.master_ip.should == "192.168.0.1" }
+  it { @manage.master_ip.should == "192.168.1.1" }
   it { @manage.type.should == "slave" }
   it { @manage.zone_dir.should == "/var/named/chroot/var/named/slave" }
   it { @manage.base_zone_file_path("example.com").should == "slave/example.com.zone" }
@@ -16,7 +16,7 @@ describe AddSlave do
 // example.com : 20110425150015
 zone "example.com" {
       type slave;
-      masters { 192.168.0.1; };
+      masters { 192.168.1.1; };
       file "slave/example.com.zone";
 };
 EOS
