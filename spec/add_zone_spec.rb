@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
@@ -143,12 +144,13 @@ EOS
   }
 end
 
-describe AddZone, "Load config file" do
+describe AddZone, "正常なコンフィグファイルの読み込み" do
   before do
-    @manage = AddZone.new("spec/fixtures")
+    @add_zone = AddZone.new("spec/fixtures/addzone.conf")
   end
-  it { lambda{ @manage.addzone_conf_check }.should_not raise_error }
-  it { lambda{ @manage.load_addzone_conf }.should_not raise_error }
+  it "コンストラクタでコンフィグファイルを指定できる" do
+    @add_zone.addzone_conf.should == "spec/fixtures/addzone.conf"
+  end
 end
 
 describe AddZone, "Load wrong config file" do
@@ -158,3 +160,4 @@ describe AddZone, "Load wrong config file" do
   it { lambda{ @manage.addzone_conf_check }.should raise_error }
   it { lambda{ @manage.load_addzone_conf }.should raise_error }
 end
+

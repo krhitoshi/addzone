@@ -13,17 +13,9 @@ class AddZone
     @zone_base = type
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
   end
-  def load_addzone_conf
-    addzone_conf_check
-  end
   def condition_check
     conf_file_check
     conf_backup_dir_check
-  end
-  def addzone_conf_check
-    unless File.exist? @addzone_conf
-      raise "Configure File of AddMaster or AddSlave Not Foud: " + @addzone_conf
-    end
   end
   def conf_file_dir_check
     unless conf_file_dir_exist?
@@ -144,5 +136,15 @@ EOS
 };
 EOS
     footer.chomp
+  end
+
+  private
+  def load_addzone_conf
+    addzone_conf_check
+  end
+  def addzone_conf_check
+    unless File.exist? @addzone_conf
+      raise "Configure File of AddMaster or AddSlave Not Foud: " + @addzone_conf
+    end
   end
 end
