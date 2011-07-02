@@ -16,15 +16,11 @@ begin
   end
 
   domain = ARGV[0]
-  manage =
-    if ARGV.size == 2
-      AddSlave.new(ARGV[1])
-    else
-      AddSlave.new(MASTER_IP)
-    end
+  manage = AddSlave.new("/etc/addzone.conf")
 
-  manage.conf_file_name = "hosting.conf"
-  manage.zone_base = "slave"
+  if ARGV.size == 2
+    manage.master_ip = ARGV[1]
+  end
 
   puts "Domain   : #{domain}"
   puts "Master IP: #{manage.master_ip}"

@@ -8,21 +8,10 @@ require 'fileutils'
 DEBUG = true
 #DEBUG = false
 
-HOSTS = ["ns1.example.com", "ns2.example.com"]
-IP_ADDRESS = "192.168.10.5"
 SSH_PORT = 10022
 
 begin
-  manage = AddMaster.new(HOSTS, IP_ADDRESS)
-  manage.email = "root@example.com"
-  manage.conf_file_name = "hosting.conf"
-  manage.zone_base = "master" # default "master"
-#  manage.zone_dir = "/var/named/chroot/var/named/master"
-  manage.zone_dir = "spec/data/master"
-#  manage.bind_user = "named" # "named"
-#  manage.bind_group = "named"  # "named"
-  manage.bind_user = "hitoshi" # "named"
-  manage.bind_group = "staff"  # "named"
+  manage = AddMaster.new("/etc/addzone.conf")
 
   if ARGV.size != 2 && ARGV.size != 1
     print "USAGE: #{$0} example.com [#{manage.ip_address}] \n"

@@ -10,6 +10,9 @@ class AddSlave < AddZone
   def type
     "slave"
   end
+  def master_ip=(ip_address)
+    @master_ip = ip_address
+  end
   def zone_conf(domain)
     conf = <<EOS
 #{zone_header(domain)}
