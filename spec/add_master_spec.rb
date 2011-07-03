@@ -27,10 +27,10 @@ EOS
     @add_master.zone_conf("example.com").should == conf
   end
   it "すでに存在するゾーンを追加しようとするとエラーを発生すること" do
-    lambda{ @add_master.add_zone_conf("example.jp") }.should raise_error
+    lambda{ @add_master.add_zone("example.jp") }.should raise_error AddZone::ConfigureError
   end
   it "存在しないゾーンファイルを削除しようとするとエラーを発生すること" do
-    lambda{ @add_master.delete_zone_file("example.com") }.should raise_error
+    lambda{ @add_master.delete_zone("example.com") }.should raise_error AddZone::ConfigureError
   end
   it "ゾーン情報が正しいこと" do
     zone = <<EOS
@@ -106,7 +106,7 @@ describe AddMaster, "パスが間違っているコンフィグファイルの�
   end
 end
 
-describe AddMaster, "コンフィグファイルへのゾーン追加" do
+describe AddMaster, "ゾーンの追加をする場合" do
   before :all do
     test_init
   end
@@ -116,47 +116,19 @@ describe AddMaster, "コンフィグファイルへのゾーン追加" do
   before do
     @add_master = AddMaster.new("etc/addzone.conf")
     clear_files
+    @zone_file = @add_master.add_zone("example.com")
   end
-  it { lambda{ @add_master.add_zone_conf("example.com") }.should_not raise_error }
-end
-
-describe AddMaster, "ゾーンファイルを生成する場合" do
-  before :all do
-    test_init
+  it "コンフィグファイルのバックアップが保存されていること" do
+    File.should be_exist("etc/backup/hosting.conf.20110425150015")
   end
-  after :all do
-    test_end
-  end
-  before do
-    @add_master = AddMaster.new("etc/addzone.conf")
-    @zone_file = @add_master.create_zone_file("example.com")
-  end
-  it "ゾーンファイルが保存されていること" do
+  it "ゾーンファイルが生成されていること" do
     File.should be_exist("master/example.com.zone")
   end
-  it "返値が正しいこと" do
+  it "返値が生成したゾーンファイルのパスであること" do
     @zone_file.should == "master/example.com.zone"
   end
-  after do
-    if File.exist? "master/example.com.zone"
-      File.delete "master/example.com.zone"
-    end
-  end
-end
-
-describe AddMaster, "ゾーンファイルを削除する場合" do
-  before :all do
-    test_init
-  end
-  after :all do
-    test_end
-  end
-  before do
-    @add_master = AddMaster.new("etc/addzone.conf")
-    @add_master.delete_zone_file("example.jp")
-  end
-  it "ゾーンファイルが存在しないこと" do
-    File.should_not be_exist("master/example.jp.zone")
+  it "コンフィグファイルにゾーンが追加されていること" do
+    lambda{ @add_master.add_zone_check("example.com") }.should raise_error AddZone::ConfigureError
   end
 end
 
@@ -183,5 +155,22 @@ describe AddMaster, "ゾーンを削除する場合" do
   end
   it "コンフィグファイルからゾーンの設定を削除できていること" do
     lambda{ @add_master.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
+  end
+end
+
+describe AddMaster, "ゾーン削除時にゾーン設定の後に空白行がない場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_master = AddMaster.new("etc/addzone.conf")
+    clear_files
+    @text = @add_master.delete_zone("example.net")
+  end
+  it "削除したコンフィグファイルのテキストの最後には空白行が含まれないこと" do
+    (@text.split('\n').last =~ /^\s*$/).should be_false
   end
 end

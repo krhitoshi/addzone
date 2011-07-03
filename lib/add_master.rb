@@ -10,14 +10,10 @@ class AddMaster < AddZone
     raise "host_names should be more than two" unless @host_names.size >= 2
     @spf_include = nil
   end
-  def create_zone_file(domain)
-    zone_dir_check
-    raise "Already Exist Zone File: " + zone_file_path(domain) if zone_file_exist?(domain)
-    File::open(zone_file_path(domain), "w"){|f|
-      f.puts zone(domain)
-    }
-    FileUtils.chown @bind_user, @bind_group, zone_file_path(domain)
-    zone_file_path(domain)
+  def add_zone(domain)
+    backup_conf_file
+    add_zone_conf(domain)
+    create_zone_file(domain)
   end
   def zone_conf(domain)
     zone_header(domain) + "\n" + zone_footer(domain) + "\n"
@@ -87,5 +83,14 @@ EOS
   def condition_check
     super
     zone_backup_dir_check
+  end
+  def create_zone_file(domain)
+    zone_dir_check
+    raise "Already Exist Zone File: " + zone_file_path(domain) if zone_file_exist?(domain)
+    File::open(zone_file_path(domain), "w"){|f|
+      f.puts zone(domain)
+    }
+    FileUtils.chown @bind_user, @bind_group, zone_file_path(domain)
+    zone_file_path(domain)
   end
 end

@@ -47,11 +47,15 @@ def remove_data_files
 end
 
 def clear_files
+  FileUtils.rm(Dir.glob("etc/hosting.conf.*"))
   FileUtils.rm(Dir.glob("etc/backup/*"))
   FileUtils.rm(Dir.glob("master/backup/*"))
   File.delete "etc/hosting.conf" if File.exist?("etc/hosting.conf")
+  File.delete "master/example.com.zone" if File.exist?("master/example.com.zone")
   FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   "etc/hosting.conf", true
+  FileUtils.copy_file File.join(DATA_DIR, "example.net.zone"),
+  File.join(TMP_DIR, "master", "example.net.zone"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
   File.join(TMP_DIR, "master", "example.jp.zone"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),

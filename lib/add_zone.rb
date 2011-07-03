@@ -18,17 +18,9 @@ class AddZone
     condition_check
   end
   def delete_zone(domain)
-    delete_zone_conf(domain)
+    text = delete_zone_conf(domain)
     backup_zone_file(domain)
-  end
-  def backup_zone_file(domain)
-    FileUtils.mv zone_file_path(domain), zone_backup_dir
-    File.join [zone_backup_dir, zone_file_name(domain)]
-  end
-  def delete_zone_file(domain)
-    zone_file_check(domain)
-    File.delete zone_file_path(domain)
-    zone_file_path(domain)
+    text
   end
   def add_zone_check(domain)
     conf_file_check
@@ -42,12 +34,16 @@ class AddZone
       raise ConfigureError, "Not Registered Zone: " + domain
     end
   end
-  def add_zone_conf(domain)
-    add_zone_check(domain)
-    open(conf_file_path, "a"){|f|
-      f.puts zone_conf(domain)
-    }
-    domain
+
+  private
+  def backup_zone_file(domain)
+    FileUtils.mv zone_file_path(domain), zone_backup_dir
+    File.join [zone_backup_dir, zone_file_name(domain)]
+  end
+  def delete_zone_file(domain)
+    zone_file_check(domain)
+    File.delete zone_file_path(domain)
+    zone_file_path(domain)
   end
   def delete_zone_conf(domain)
     delete_zone_check(domain)
@@ -79,8 +75,13 @@ class AddZone
     end
     text
   end
-
-  private
+  def add_zone_conf(domain)
+    add_zone_check(domain)
+    open(conf_file_path, "a"){|f|
+      f.puts zone_conf(domain)
+    }
+    domain
+  end
   def load_addzone_conf
     addzone_conf_check
     yaml = YAML.load_file(@addzone_conf)

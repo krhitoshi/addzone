@@ -11,26 +11,18 @@ DEBUG = true
 SSH_PORT = 10022
 
 begin
-  manage = AddMaster.new("/etc/addzone.conf")
-
   if ARGV.size != 2 && ARGV.size != 1
-    print "USAGE: #{$0} example.com [#{manage.ip_address}] \n"
-    exit
+    raise "USAGE: #{$0} example.com [192.168.100.100] \n"
   end
 
+  add_master = AddMaster.new("/etc/addzone.conf")
   domain  = ARGV[0]
-
-  if ARGV.size == 2
-    manage.ip_address = ARGV[1]
-  end
+  add_master.ip_address = ARGV[1] if ARGV.size == 2
 
   puts "Domain   : #{domain}"
-  puts "IP Adress: #{manage.ip_address}"
-  manage.condition_check
+  puts "IP Adress: #{add_master.ip_address}"
 
-  puts "Backup Configure File: " + manage.backup_conf_file
-  puts "Added Zone Configuration: " + manage.add_zone_conf(domain)
-  puts "Create Zone File: " + manage.create_zone_file(domain)
+  add_master.add_zone(domain)
 
   checkconf = "/usr/sbin/named-checkconf  -t /var/named/chroot/ /etc/named.conf"
   puts checkconf
@@ -49,13 +41,13 @@ begin
   end
 
   HOSTS[1..-1].each do |host|
-    ns2 = "ssh -p #{SSH_PORT} root@#{host} /root/bin/addslave.rb #{domain}"
+    ns2 = "ssh -p #{SSH_PORT} root@#{host} addslave #{domain}"
     puts ns2
     puts `#{ns2}` unless DEBUG
   end
 
   sleep 1 unless DEBUG
-  check_dns = "/root/bin/checkdns.rb #{domain}"
+  check_dns = "checkdns #{domain}"
   puts check_dns
   puts `#{check_dns}` unless DEBUG
 rescue => error
