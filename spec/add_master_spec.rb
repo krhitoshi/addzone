@@ -48,6 +48,7 @@ zone "example.com" {
       type master;
       file "master/example.com.zone";
 };
+
 EOS
     #puts @add_master.zone_conf("example.com")
     @add_master.zone_conf("example.com").should == conf

@@ -69,7 +69,7 @@ class AddZone
   def add_zone_conf(domain)
     add_zone_check(domain)
     open(conf_file_path, "a"){|f|
-      f.puts "\n" + zone_conf(domain)
+      f.puts zone_conf(domain)
     }
     domain
   end
@@ -115,6 +115,7 @@ EOS
     footer = <<EOS
       file "#{base_zone_file_path(domain)}";
 };
+
 EOS
     footer.chomp
   end

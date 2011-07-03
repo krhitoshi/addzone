@@ -24,6 +24,7 @@ zone "example.com" {
       masters { 192.168.1.1; };
       file "slave/example.com.zone";
 };
+
 EOS
     #puts @add_slave.zone_conf("example.com")
     @add_slave.zone_conf("example.com").should == conf
@@ -50,6 +51,7 @@ zone "example.com" {
       masters { 192.168.100.1; };
       file "slave/example.com.zone";
 };
+
 EOS
     @add_slave.zone_conf("example.com").should == conf
   end
