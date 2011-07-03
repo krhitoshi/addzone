@@ -115,20 +115,6 @@ describe AddMaster, "add zone into config operation" do
   }
 end
 
-describe AddMaster, "conf file bakup operation" do
-  before :all do
-    test_init
-  end
-  after :all do
-    test_end
-  end
-  before do
-    @add_master = AddMaster.new("etc/addzone.conf")
-  puts "clear: " + Dir.pwd
-  end
-  it { @add_master.backup_conf_file.should == "etc/backup/hosting.conf.20110425150015" }
-end
-
 describe AddMaster, "zone creation operation" do
   before :all do
     test_init

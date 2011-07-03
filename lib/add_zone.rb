@@ -8,18 +8,18 @@ class AddZone
   class ConfigureError < StandardError; end
 
   def initialize(addzone_conf = nil)
-    addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
+    if addzone_conf
+      @addzone_conf = addzone_conf
+    else
+      @addzone_conf = "/etc/addzone.conf"
+    end
+
     load_addzone_conf
     @zone_base = type
   end
   def condition_check
     conf_file_check
     conf_backup_dir_check
-  end
-  def backup_conf_file
-    conf_backup_dir_check
-    FileUtils.copy_file(conf_file_path, conf_backup_file_path, true)
-    conf_backup_file_path
   end
   def type
     "base"
@@ -200,5 +200,10 @@ EOS
   end
   def zone_dir_exist?
     File.directory?(zone_dir)
+  end
+  def backup_conf_file
+    conf_backup_dir_check
+    FileUtils.copy_file(conf_file_path, conf_backup_file_path, true)
+    conf_backup_file_path
   end
 end
