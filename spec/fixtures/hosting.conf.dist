@@ -15,7 +15,6 @@ zone "example.jp" {
         type master;
         file "master/example.net.zone";
   };
-
 // example.info : 200912302057
 	zone	"example.info"	{
         type master;
