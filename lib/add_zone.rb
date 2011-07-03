@@ -83,22 +83,6 @@ class AddZone
     end
     text
   end
-  def zone_header(domain)
-    header = <<EOS
-// #{domain} : #{str_time}
-zone "#{domain}" {
-      type #{type};
-EOS
-    header.chomp
-  end
-  def zone_footer(domain)
-    footer = <<EOS
-      file "#{base_zone_file_path(domain)}";
-};
-
-EOS
-    footer.chomp
-  end
 
   private
   def load_addzone_conf
@@ -205,5 +189,21 @@ EOS
   end
   def conf_file_path
     File.join [@conf_file_dir, @conf_file_name]
+  end
+  def zone_header(domain)
+    header = <<EOS
+// #{domain} : #{str_time}
+zone "#{domain}" {
+      type #{type};
+EOS
+    header.chomp
+  end
+  def zone_footer(domain)
+    footer = <<EOS
+      file "#{base_zone_file_path(domain)}";
+};
+
+EOS
+    footer.chomp
   end
 end
