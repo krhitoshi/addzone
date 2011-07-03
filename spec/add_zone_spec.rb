@@ -52,12 +52,8 @@ describe AddZone, "コンフィグファイルからゾーンを削除する場�
   it "コンフィグファイルにないゾーンを削除しようとするとConfigureErrorを返す" do
     lambda{ @add_zone.delete_zone_check("example.com") }.should raise_error AddZone::ConfigureError
   end
-  it "削除したコンフィグファイルには1行空白が含まれていること" do
-    num = 0
-    @text.each do |line|
-       num += 1 if line =~ /^\s*$/
-    end
-    num.should == 1
+  it "削除したコンフィグファイルのテキストの最後には空白が含まれていること" do
+    (@text.split('\n').last =~ /^\s*$/).should be_true
   end
 end
 
