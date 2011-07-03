@@ -184,5 +184,21 @@ describe AddMaster, "ゾーンファイルをバックアップする場合" do
   it "バックアップファイルが保存されていること" do
     (File.exist? @backup).should be_true
   end
-  
+end
+
+describe AddMaster, "ゾーンを削除する場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_master = AddMaster.new("etc/addzone.conf")
+    clear_files
+    @add_master.delete_zone("example.jp")
+  end
+  it "バックアップファイルが保存されていること" do
+    (File.exist? "master/backup/example.jp.zone").should be_true
+  end
 end
