@@ -28,6 +28,12 @@ class AddZone
       raise "Already Registered Zone: " + domain
     end
   end
+  def delete_zone_check(domain)
+    conf_file_check
+    unless zone_exist?(domain)
+      raise "Not Registered Zone: " + domain
+    end
+  end
   def backup_dir(base)
     File.join [base, "backup"]
   end
@@ -64,6 +70,29 @@ class AddZone
       f.puts "\n" + zone_conf(domain)
     }
     domain
+  end
+  def delete_zone_conf(domain)
+    delete_zone_check(domain)
+    flag = false;
+    backup = backup_conf_file
+    open(conf_file_path,"w") do |wf|
+      open(backup).each do |line|
+        print line
+        if line =~ /\/\/ #{domain} :/
+          flag = true
+        end
+        if !flag && line =~ /zone "#{domain}" \{/
+          flag = true
+        end
+        if flag && line =~ /\};/ && line !~ /\{/
+          print line
+          flag = false
+          next
+        end
+        print line if flag
+        wf.write line unless flag
+      end
+    end
   end
   def zone_header(domain)
     header = <<EOS

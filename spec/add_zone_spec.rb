@@ -33,6 +33,10 @@ describe AddZone, "When the paths exist" do
 
   it { lambda{ @add_zone.zone_check("example.com") }.should_not raise_error }
   it { lambda{ @add_zone.zone_check("example.jp") }.should raise_error }
+  it "コンフィグファイルからゾーンの設定を削除できる" do
+    @add_zone.delete_zone_conf("example.jp")
+    lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error 
+  end
 end
 
 describe AddZone, "When conf_file_name is specified" do
