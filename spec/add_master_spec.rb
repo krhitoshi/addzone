@@ -17,25 +17,14 @@ describe AddMaster do
   it { @add_master.ip_address.should == "192.168.10.5" }
   it { @add_master.bind_user.should == "hitoshi" }
   it { @add_master.bind_group.should == "staff" }
-  it { @add_master.base_zone_file_path("example.com").should == "master/example.com.zone" }
   it { @add_master.email.should == "root.example.com" }
-  it { @add_master.serial.should == "2011042501" }
   it { @add_master.zone_dir.should == "master" }
   it "spf_include and zone_TXT" do
     @add_master.spf_include.should be_nil
-    @add_master.zone_TXT.should == %Q!        IN TXT   "v=spf1 mx ~all"!
     lambda{ @add_master.spf_include = "spf.example.com" }.should_not raise_error
 
     @add_master.spf_include.should == "spf.example.com"
   end
-  it {
-    @add_master.zone_SOA.should ==
-    "@       IN SOA ns1.example.com. root.example.com.("
-  }
-  it {
-    @add_master.zone_NS.should ==
-    "        IN NS    ns1.example.com.\n        IN NS    ns2.example.com."
-  }
   it "master zone conf" do
     conf = <<EOS
 // example.com : 20110425150015

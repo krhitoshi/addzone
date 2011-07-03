@@ -24,28 +24,8 @@ class AddMaster < AddZone
     FileUtils.chown bind_user, bind_group, zone_file_path(domain)
     zone_file_path(domain)
   end
-  def serial
-    Time.now.strftime("%Y%m%d") + "01"
-  end
   def zone_conf(domain)
     zone_header(domain) + "\n" + zone_footer(domain) + "\n"
-  end
-  def zone_SOA
-    "@       IN SOA #{@host_names[0]}. #{email}.("
-  end
-  def zone_NS
-    ns_records = []
-    @host_names.each do |name|
-      ns_records << "        IN NS    #{name}."
-    end
-    ns_records.join("\n")
-  end
-  def zone_TXT
-    if @spf_include
-      %Q!        IN TXT   "v=spf1 mx include:#{@spf_include} ~all"!
-    else
-      %Q!        IN TXT   "v=spf1 mx ~all"!
-    end
   end
   def zone(domain)
     zone = <<EOS
@@ -84,5 +64,25 @@ EOS
   end
   def type
     "master"
+  end
+  def zone_SOA
+    "@       IN SOA #{@host_names[0]}. #{email}.("
+  end
+  def zone_NS
+    ns_records = []
+    @host_names.each do |name|
+      ns_records << "        IN NS    #{name}."
+    end
+    ns_records.join("\n")
+  end
+  def zone_TXT
+    if @spf_include
+      %Q!        IN TXT   "v=spf1 mx include:#{@spf_include} ~all"!
+    else
+      %Q!        IN TXT   "v=spf1 mx ~all"!
+    end
+  end
+  def serial
+    Time.now.strftime("%Y%m%d") + "01"
   end
 end
