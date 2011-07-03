@@ -33,11 +33,6 @@ describe AddMaster do
     @add_master.zone_SOA.should ==
     "@       IN SOA ns1.example.com. root.example.com.("
   }
-  it "zone_SOA with email" do
-    @add_master.email = "root@example.com"
-    @add_master.zone_SOA.should ==
-      "@       IN SOA ns1.example.com. root.example.com.("
-  end
   it {
     @add_master.zone_NS.should ==
     "        IN NS    ns1.example.com.\n        IN NS    ns2.example.com."
@@ -51,7 +46,6 @@ zone "example.com" {
 };
 
 EOS
-    #puts @add_master.zone_conf("example.com")
     @add_master.zone_conf("example.com").should == conf
   end
   it "zone contents" do
@@ -74,8 +68,6 @@ ftp     IN CNAME www
 pop     IN CNAME mail
 smtp    IN CNAME mail
 EOS
-    @add_master.email = "root@example.com"
-    #puts @add_master.zone("example.com")
     @add_master.zone("example.com").should == zone
   end
 end

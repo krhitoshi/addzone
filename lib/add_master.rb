@@ -27,9 +27,6 @@ class AddMaster < AddZone
     FileUtils.chown bind_user, bind_group, zone_file_path(domain)
     zone_file_path(domain)
   end
-  def email=(address)
-    @email = address.gsub(/@/, '.')
-  end
   def serial
     Time.now.strftime("%Y%m%d") + "01"
   end
@@ -80,9 +77,12 @@ EOS
     yaml = super['addmaster']
     @ip_address = yaml['ip_address']
     @host_names = yaml['name_servers']
-    @email = yaml['email'].gsub(/@/, '.')
+    self.email = yaml['email']
     @zone_dir = yaml['zone_dir']
     @bind_user = yaml['bind_user']
     @bind_group = yaml['bind_group']
+  end
+  def email=(address)
+    @email = address.gsub(/@/, '.')
   end
 end
