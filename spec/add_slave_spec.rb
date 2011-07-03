@@ -14,7 +14,6 @@ describe AddSlave do
   end
   it { @add_slave.master_ip.should == "192.168.1.1" }
   it { @add_slave.zone_dir.should == "slave" }
-  it { @add_slave.base_zone_file_path("example.com").should == "slave/example.com.zone" }
   it "slave zone conf" do
     conf = <<EOS
 // example.com : 20110425150015

@@ -2,7 +2,7 @@ require 'fileutils'
 require 'yaml'
 
 class AddZone
-  attr_accessor :conf_file_name, :zone_base
+  attr_accessor :zone_base
   attr_reader :addzone_conf, :zone_dir
 
   class ConfigureError < StandardError; end
@@ -45,36 +45,6 @@ class AddZone
     unless zone_exist?(domain)
       raise ConfigureError, "Not Registered Zone: " + domain
     end
-  end
-  def backup_dir(base)
-    File.join [base, "backup"]
-  end
-  def conf_backup_dir
-    backup_dir(@conf_file_dir)
-  end
-  def zone_backup_dir
-    backup_dir(@zone_dir)
-  end
-  def conf_file_path
-    File.join [@conf_file_dir, @conf_file_name]
-  end
-  def str_time
-    Time.now.strftime("%Y%m%d%H%M%S")
-  end
-  def conf_backup_file_path
-    File.join [conf_backup_dir, @conf_file_name + "." + str_time]
-  end
-  def zone_file_name(domain)
-    domain + ".zone"
-  end
-  def zone_file_path(domain)
-    File.join [zone_dir, zone_file_name(domain)]
-  end
-  def base_zone_file_path(domain)
-    File.join [zone_base, zone_file_name(domain)]
-  end
-  def zone_file_exist?(domain)
-    File.exist?(zone_file_path(domain))
   end
   def add_zone_conf(domain)
     add_zone_check(domain)
@@ -205,5 +175,35 @@ EOS
   end
   def type
     "base"
+  end
+  def str_time
+    Time.now.strftime("%Y%m%d%H%M%S")
+  end
+  def backup_dir(base)
+    File.join [base, "backup"]
+  end
+  def conf_backup_dir
+    backup_dir(@conf_file_dir)
+  end
+  def zone_backup_dir
+    backup_dir(@zone_dir)
+  end
+  def conf_backup_file_path
+    File.join [conf_backup_dir, @conf_file_name + "." + str_time]
+  end
+  def zone_file_name(domain)
+    domain + ".zone"
+  end
+  def zone_file_path(domain)
+    File.join [zone_dir, zone_file_name(domain)]
+  end
+  def base_zone_file_path(domain)
+    File.join [zone_base, zone_file_name(domain)]
+  end
+  def zone_file_exist?(domain)
+    File.exist?(zone_file_path(domain))
+  end
+  def conf_file_path
+    File.join [@conf_file_dir, @conf_file_name]
   end
 end
