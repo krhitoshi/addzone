@@ -1,13 +1,6 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
 require 'add_slave'
-
-DEBUG = true
-#DEBUG = false
-
-MASTER_IP = "192.168.1.1"
 
 begin
   if ARGV.size != 2 && ARGV.size != 1
@@ -16,38 +9,19 @@ begin
   end
 
   domain = ARGV[0]
-  manage = AddSlave.new("/etc/addzone.conf")
+  add_slave = AddSlave.new("/etc/addzone.conf")
 
   if ARGV.size == 2
-    manage.master_ip = ARGV[1]
+    add_slave.master_ip = ARGV[1]
   end
 
   puts "Domain   : #{domain}"
-  puts "Master IP: #{manage.master_ip}"
+  puts "Master IP: #{add_slave.master_ip}"
 
-  manage.condition_check
-
-  puts "Backup Configure File: " + manage.backup_conf_file
-  puts "Added Zone Configuration: " + manage.add_zone_conf(domain)
-
-
-  checkconf = "/usr/sbin/named-checkconf  -t /var/named/chroot/ /etc/named.conf"
-  puts checkconf
-
-  unless DEBUG
-    puts `#{checkconf}`
-    raise 'ERROR: named-checkconf failed' if $? != 0
-  end
-
-  rndc_reload = "/usr/sbin/rndc reload"
-  puts rndc_reload
-
-  unless DEBUG
-    puts `#{rndc_reload}`
-    raise 'ERROR: rndc reload failed' if $? != 0
-  end
+  add_slave.add_zone(domain)
+  add_slave.named_checkconf
+  add_slave.reload
 
 rescue => error
-  puts
-  puts $0 + ": " + error
+  puts "ERROR: " + error
 end
