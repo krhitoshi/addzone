@@ -44,13 +44,20 @@ describe AddZone, "コンフィグファイルからゾーンを削除する場�
   before do
     @add_zone = AddZone.new("etc/addzone.conf")
     clear_files
-    @add_zone.delete_zone_conf("example.jp")
+    @text = @add_zone.delete_zone_conf("example.jp")
   end
   it "コンフィグファイルからゾーンの設定を削除できる" do
     lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
   end
   it "コンフィグファイルにないゾーンを削除しようとするとConfigureErrorを返す" do
     lambda{ @add_zone.delete_zone_check("example.com") }.should raise_error AddZone::ConfigureError
+  end
+  it "削除したコンフィグファイルには1行空白が含まれていること" do
+    num = 0
+    @text.each do |line|
+       num += 1 if line =~ /^\s*$/
+    end
+    num.should == 1
   end
 end
 

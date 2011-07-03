@@ -75,25 +75,33 @@ class AddZone
   end
   def delete_zone_conf(domain)
     delete_zone_check(domain)
-    flag = false;
+    flag = false
+    end_flag = false
     backup = backup_conf_file
+    text = ""
     open(conf_file_path,"w") do |wf|
       open(backup).each do |line|
         if line =~ /\/\/ #{domain} :/
           flag = true
-        end
-        if !flag && line =~ /zone "#{domain}" \{/
+        elsif !flag && line =~ /zone "#{domain}" \{/
           flag = true
-        end
-        if flag && line =~ /\};/ && line !~ /\{/
-          print line
+        elsif flag && line =~ /\};/ && line !~ /\{/
+          text += line
+          end_flag = true
           flag = false
           next
+        elsif end_flag
+          end_flag = false
+          if line =~ /^\s*$/
+            text += line
+            next
+          end
         end
-        print line if flag
+        text += line if flag
         wf.write line unless flag
       end
     end
+    text
   end
   def zone_header(domain)
     header = <<EOS
