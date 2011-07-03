@@ -21,9 +21,6 @@ class AddZone
     conf_file_check
     conf_backup_dir_check
   end
-  def type
-    "base"
-  end
   def delete_zone(domain)
     delete_zone_conf(domain)
     backup_zone_file(domain)
@@ -205,5 +202,8 @@ EOS
     conf_backup_dir_check
     FileUtils.copy_file(conf_file_path, conf_backup_file_path, true)
     conf_backup_file_path
+  end
+  def type
+    "base"
   end
 end

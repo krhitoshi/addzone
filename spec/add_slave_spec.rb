@@ -13,7 +13,6 @@ describe AddSlave do
     @add_slave = AddSlave.new("etc/addzone.conf")
   end
   it { @add_slave.master_ip.should == "192.168.1.1" }
-  it { @add_slave.type.should == "slave" }
   it { @add_slave.zone_dir.should == "slave" }
   it { @add_slave.base_zone_file_path("example.com").should == "slave/example.com.zone" }
   it "slave zone conf" do

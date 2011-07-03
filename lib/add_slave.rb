@@ -7,9 +7,6 @@ class AddSlave < AddZone
   def initialize(addzone_conf = nil)
     super(addzone_conf)
   end
-  def type
-    "slave"
-  end
   def master_ip=(ip_address)
     @master_ip = ip_address
   end
@@ -27,5 +24,8 @@ EOS
     yaml = super['addslave']
     @master_ip = yaml['master_ip']
     @zone_dir = yaml['zone_dir']
+  end
+  def type
+    "slave"
   end
 end
