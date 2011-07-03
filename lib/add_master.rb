@@ -2,12 +2,12 @@
 require 'add_zone'
 
 class AddMaster < AddZone
-  attr_reader :ip_address
+  attr_reader :ip_address, :name_servers
 
   def initialize(addzone_conf = nil)
     @bind_user = @bind_group = "named"
     super(addzone_conf)
-    raise "host_names should be more than two" unless @host_names.size >= 2
+    raise "host_names should be more than two" unless @name_servers.size >= 2
     @spf_include = nil
   end
   def add_zone(domain)
@@ -47,7 +47,7 @@ EOS
   def load_addzone_conf
     yaml = super['addmaster']
     @ip_address = yaml['ip_address']
-    @host_names = yaml['name_servers']
+    @name_servers = yaml['name_servers']
     self.email = yaml['email']
     @spf = yaml['spf']
     @zone_dir = yaml['zone_dir']
@@ -61,11 +61,11 @@ EOS
     "master"
   end
   def zone_SOA
-    "@       IN SOA #{@host_names[0]}. #{@email}.("
+    "@       IN SOA #{@name_servers[0]}. #{@email}.("
   end
   def zone_NS
     ns_records = []
-    @host_names.each do |name|
+    @name_servers.each do |name|
       ns_records << "        IN NS    #{name}."
     end
     ns_records.join("\n")

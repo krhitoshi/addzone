@@ -23,34 +23,18 @@ begin
   puts "IP Adress: #{add_master.ip_address}"
 
   add_master.add_zone(domain)
+  add_master.named_checkconf
+  add_master.reload
 
-  checkconf = "/usr/sbin/named-checkconf  -t /var/named/chroot/ /etc/named.conf"
-  puts checkconf
-
-  unless DEBUG
-    puts `#{checkconf}`
-    raise 'ERROR: named-checkconf failed' if $? != 0
+  add_master.name_servers[1..-1].each do |server|
+    ssh = "ssh -p #{SSH_PORT} root@#{server} addslave #{domain}"
+    puts ssh
+    puts `#{ssh}`
+    check_dns = "checkdns #{server} #{domain}"
+    puts check_dns
+    puts `#{check_dns}`
   end
 
-  rndc_reload = "/usr/sbin/rndc reload"
-  puts rndc_reload
-
-  unless DEBUG
-    puts `#{rndc_reload}`
-    raise 'ERROR: rndc reload failed' if $? != 0
-  end
-
-  HOSTS[1..-1].each do |host|
-    ns2 = "ssh -p #{SSH_PORT} root@#{host} addslave #{domain}"
-    puts ns2
-    puts `#{ns2}` unless DEBUG
-  end
-
-  sleep 1 unless DEBUG
-  check_dns = "checkdns #{domain}"
-  puts check_dns
-  puts `#{check_dns}` unless DEBUG
 rescue => error
-  puts
-  puts $0 + ": " + error
+  puts "ERROR: " + error
 end

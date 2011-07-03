@@ -43,8 +43,19 @@ describe AddZone do
     end
   end
 
+    describe AddZone, "設定を反映させるためにリロードできる" do
+    before do
+      @add_zone = AddZone.new("etc/addzone.conf")
+    end
+    it "エラーは発生しない" do
+      pending
+      lambda{ @add_zone.rndc_reload }.should_not raise_error StandardError
+    end
+  end
+
   describe AddZone, "正常なコンフィグファイルをチェックする場合" do
     before do
+      pending "コマンドがない" unless AddZone.named_checkconf_exist?
       @add_zone = AddZone.new("etc/addzone.conf")
     end
     it "エラーは発生しない" do
@@ -54,6 +65,7 @@ describe AddZone do
 
   describe AddZone, "異常なコンフィグファイルをチェックする場合" do
     before do
+      pending "コマンドがない" unless AddZone.named_checkconf_exist?
       @add_zone = AddZone.new("etc/addzone_wrong.conf")
     end
     it "エラーが発生する" do
