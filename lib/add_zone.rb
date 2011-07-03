@@ -2,8 +2,7 @@ require 'fileutils'
 require 'yaml'
 
 class AddZone
-  attr_accessor :zone_base
-  attr_reader :addzone_conf, :zone_dir
+  attr_reader :addzone_conf
 
   class ConfigureError < StandardError; end
 
@@ -97,7 +96,7 @@ class AddZone
   end
   def zone_dir_check
     unless zone_dir_exist?
-      raise "Zone Directory Not Found: " + zone_dir
+      raise "Zone Directory Not Found: " + @zone_dir
     end
   end
   def zone_backup_dir_check
@@ -147,7 +146,7 @@ class AddZone
     false
   end
   def zone_dir_exist?
-    File.directory?(zone_dir)
+    File.directory?(@zone_dir)
   end
   def backup_conf_file
     conf_backup_dir_check
@@ -176,10 +175,10 @@ class AddZone
     domain + ".zone"
   end
   def zone_file_path(domain)
-    File.join [zone_dir, zone_file_name(domain)]
+    File.join [@zone_dir, zone_file_name(domain)]
   end
   def base_zone_file_path(domain)
-    File.join [zone_base, zone_file_name(domain)]
+    File.join [@zone_base, zone_file_name(domain)]
   end
   def zone_file_exist?(domain)
     File.exist?(zone_file_path(domain))

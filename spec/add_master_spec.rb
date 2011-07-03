@@ -13,7 +13,6 @@ describe AddMaster do
     test_end
   end
 
-  it { @add_master.zone_dir.should == "master" }
   it "spf_include and zone_TXT" do
     @add_master.spf_include.should be_nil
     lambda{ @add_master.spf_include = "spf.example.com" }.should_not raise_error

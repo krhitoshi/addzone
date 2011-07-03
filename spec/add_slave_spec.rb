@@ -13,7 +13,6 @@ describe AddSlave do
     @add_slave = AddSlave.new("etc/addzone.conf")
   end
   it { @add_slave.master_ip.should == "192.168.1.1" }
-  it { @add_slave.zone_dir.should == "slave" }
   it "slave zone conf" do
     conf = <<EOS
 // example.com : 20110425150015
