@@ -24,18 +24,33 @@ describe AddZone, "When the paths exist" do
 
   it { lambda{ @add_zone.condition_check }.should_not raise_error }
 
-  it { @add_zone.should_not be_zone_exist("example.com") }
-  it { @add_zone.should be_zone_exist("example.jp") }
-  # included 2 empty characters
-  it { @add_zone.should be_zone_exist("example.net") }
-  # included tab character
-  it { @add_zone.should be_zone_exist("example.info") }
-
   it { lambda{ @add_zone.add_zone_check("example.com") }.should_not raise_error }
   it { lambda{ @add_zone.add_zone_check("example.jp") }.should raise_error AddZone::ConfigureError }
-  it "コンフィグファイルからゾーンの設定を削除できる" do
+  it "空白の量が違っても認識できる" do
+    lambda{ @add_zone.add_zone_check("example.net") }.should raise_error AddZone::ConfigureError
+  end
+  it "空白にタブが使われていても認識できる" do
+    lambda{ @add_zone.add_zone_check("example.info") }.should raise_error AddZone::ConfigureError
+  end
+end
+
+describe AddZone, "コンフィグファイルからゾーンを削除する場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_zone = AddZone.new("etc/addzone.conf")
+    clear_files
     @add_zone.delete_zone_conf("example.jp")
+  end
+  it "コンフィグファイルからゾーンの設定を削除できる" do
     lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
+  end
+  it "コンフィグファイルにないゾーンを削除しようとするとConfigureErrorを返す" do
+    lambda{ @add_zone.delete_zone_check("example.com") }.should raise_error AddZone::ConfigureError
   end
 end
 

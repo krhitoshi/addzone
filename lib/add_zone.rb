@@ -79,7 +79,6 @@ class AddZone
     backup = backup_conf_file
     open(conf_file_path,"w") do |wf|
       open(backup).each do |line|
-        print line
         if line =~ /\/\/ #{domain} :/
           flag = true
         end

@@ -11,13 +11,13 @@ zone "example.jp" {
 };
 
 // example.net : 200912302057
-zone   "example.net" {
+  zone   "example.net"   {
         type master;
         file "master/example.net.zone";
-};
+  };
 
 // example.info : 200912302057
-zone	"example.info" {
+	zone	"example.info"	{
         type master;
         file "master/example.info.zone";
-};
+	};
