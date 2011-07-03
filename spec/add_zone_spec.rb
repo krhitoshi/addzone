@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe AddZone, "When the paths exist" do
+describe AddZone, "正常なコンフィグファイルの場合" do
   before :all do
     test_init
   end
@@ -13,15 +13,16 @@ describe AddZone, "When the paths exist" do
     @add_zone = AddZone.new("etc/addzone.conf")
     clear_files
   end
-  it { @add_zone.should be_conf_file_dir_exist }
-  it { @add_zone.should be_conf_file_exist }
-  it { @add_zone.should be_conf_backup_dir_exist }
-  it { lambda{ @add_zone.add_zone_check("example.com") }.should_not raise_error }
-  it { lambda{ @add_zone.add_zone_check("example.jp") }.should raise_error AddZone::ConfigureError }
-  it "空白の量が違っても認識できる" do
+  it "コンフィグファイルにないゾーンが検出できること" do
+    lambda{ @add_zone.add_zone_check("example.com") }.should_not raise_error
+  end
+  it "コンフィグファイルにあるゾーンが検出できること" do
+    lambda{ @add_zone.add_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
+  end
+  it "空白の量が違っても認識できること" do
     lambda{ @add_zone.add_zone_check("example.net") }.should raise_error AddZone::ConfigureError
   end
-  it "空白にタブが使われていても認識できる" do
+  it "空白にタブが使われていても認識できること" do
     lambda{ @add_zone.add_zone_check("example.info") }.should raise_error AddZone::ConfigureError
   end
 end
