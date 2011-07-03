@@ -20,7 +20,6 @@ AddZoneはBINDにゾーンを追加するためのツールです。
 base:				        ## 基本設定
   conf_file_dir: /var/named/chroot/etc  # コンフィグファイルの存在するディレクトリ
   conf_file_name: hosting.conf	        # 編集するコンフィグファイルの名前
-  checkconf: /usr/sbin/named-checkconf  # 
 
 addmaster:   			       	## マスターゾーンの設定
   ip_address: 192.168.10.5		# Aレコードに記載されるデフォルトIPアドレス
