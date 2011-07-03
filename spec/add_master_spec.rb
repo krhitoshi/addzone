@@ -19,7 +19,7 @@ describe AddMaster, "正常なコンフィグファイルの場合" do
 
     @add_master.spf_include.should == "spf.example.com"
   end
-  it "master zone conf" do
+  it "コンフィグファイルへの設定テキストが正しいこと" do
     conf = <<EOS
 // example.com : 20110425150015
 zone "example.com" {
@@ -29,6 +29,12 @@ zone "example.com" {
 
 EOS
     @add_master.zone_conf("example.com").should == conf
+  end
+  it "すでに存在するゾーンを追加しようとするとエラーを発生すること" do
+    lambda{ @add_master.add_zone_conf("example.jp") }.should raise_error
+  end
+  it "存在しないゾーンファイルを削除しようとするとエラーを発生すること" do
+    lambda{ @add_master.delete_zone_file("example.com") }.should raise_error
   end
   it "ゾーン情報が正しいこと" do
     zone = <<EOS
@@ -88,6 +94,7 @@ EOS
     @add_master.zone("example.com").should == zone
   end
 end
+
 describe AddMaster, "パスが間違っているコンフィグファイルの場合" do
   before :all do
     test_init
@@ -100,7 +107,7 @@ describe AddMaster, "パスが間違っているコンフィグファイルの�
   end
 end
 
-describe AddMaster, "add zone into config operation" do
+describe AddMaster, "コンフィグファイルへのゾーン追加" do
   before :all do
     test_init
   end
@@ -111,15 +118,10 @@ describe AddMaster, "add zone into config operation" do
     @add_master = AddMaster.new("etc/addzone.conf")
     clear_files
   end
-  it { lambda{ @add_master.condition_check}.should_not raise_error }
   it { lambda{ @add_master.add_zone_conf("example.com") }.should_not raise_error }
-  it {
-    @add_master.add_zone_conf("example.com").should == "example.com"
-    lambda{ @add_master.add_zone_conf("example.com") }.should raise_error
-  }
 end
 
-describe AddMaster, "zone creation operation" do
+describe AddMaster, "ゾーンファイルを生成する場合" do
   before :all do
     test_init
   end
@@ -128,31 +130,34 @@ describe AddMaster, "zone creation operation" do
   end
   before do
     @add_master = AddMaster.new("etc/addzone.conf")
+    @zone_file = @add_master.create_zone_file("example.com")
   end
-  it { @add_master.should be_zone_dir_exist }
-  it { @add_master.should_not be_zone_file_exist("example.com") }
-  it { @add_master.should be_zone_file_exist("example.jp") }
-  it { @add_master.should be_zone_backup_dir_exist }
-
-  it{
-    lambda{ @add_master.create_zone_file("example.com") }.should_not raise_error
+  it "ゾーンファイルが保存されていること" do
     File.should be_exist("master/example.com.zone")
-    lambda{ @add_master.delete_zone_file("example.com") }.should_not raise_error
-    File.should_not be_exist("master/example.com.zone")
-  }
-  it { @add_master.create_zone_file("example.com").should == "master/example.com.zone" }
-  it {
-    @add_master.create_zone_file("example.com")
-    lambda{ @add_master.create_zone_file("example.com") }.should raise_error
-    @add_master.delete_zone_file("example.com").should == "master/example.com.zone"
-  }
-  it {
-    lambda{ @add_master.delete_zone_file("example.com") }.should raise_error
-  }
+  end
+  it "返値が正しいこと" do
+    @zone_file.should == "master/example.com.zone"
+  end
   after do
     if File.exist? "master/example.com.zone"
       File.delete "master/example.com.zone"
     end
+  end
+end
+
+describe AddMaster, "ゾーンファイルを削除する場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_master = AddMaster.new("etc/addzone.conf")
+    @add_master.delete_zone_file("example.jp")
+  end
+  it "ゾーンファイルが存在しないこと" do
+    File.should_not be_exist("master/example.jp.zone")
   end
 end
 
