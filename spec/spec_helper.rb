@@ -38,6 +38,8 @@ def prepare_data_files
   File.join(TMP_DIR, "etc", "hosting.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
   File.join(TMP_DIR, "master", "example.jp.zone"), true
+  FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
+  File.join(TMP_DIR, "slave", "example.jp.zone"), true
 end
 
 def remove_data_files
@@ -52,6 +54,8 @@ def clear_files
   "etc/hosting.conf", true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
   File.join(TMP_DIR, "master", "example.jp.zone"), true
+  FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
+  File.join(TMP_DIR, "slave", "example.jp.zone"), true
 end
 
 class Time

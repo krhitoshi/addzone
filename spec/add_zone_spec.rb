@@ -46,11 +46,11 @@ describe AddZone, "コンフィグファイルからゾーンを削除する場�
     clear_files
     @text = @add_zone.delete_zone_conf("example.jp")
   end
-  it "コンフィグファイルからゾーンの設定を削除できる" do
+  it "ゾーンの設定を削除できていること" do
     lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
   end
-  it "コンフィグファイルにないゾーンを削除しようとするとConfigureErrorを返す" do
-    lambda{ @add_zone.delete_zone_check("example.com") }.should raise_error AddZone::ConfigureError
+  it "コンフィグファイルにないゾーンを削除しようとするとConfigureErrorを返すこと" do
+    lambda{ @add_zone.delete_zone_conf("example.com") }.should raise_error AddZone::ConfigureError
   end
   it "削除したコンフィグファイルのテキストの最後には空白行が含まれていること" do
     (@text.split('\n').last =~ /^\s*$/).should be_true

@@ -166,26 +166,6 @@ describe AddMaster, "zone creation operation" do
   end
 end
 
-describe AddMaster, "ゾーンファイルをバックアップする場合" do
-  before :all do
-    test_init
-  end
-  after :all do
-    test_end
-  end
-  before do
-    @add_master = AddMaster.new("etc/addzone.conf")
-    clear_files
-    @backup = @add_master.backup_zone_file("example.jp")
-  end
-  it "バックアップファイル名が正しいこと" do
-    @backup.should == "master/backup/example.jp.zone"
-  end
-  it "バックアップファイルが保存されていること" do
-    (File.exist? @backup).should be_true
-  end
-end
-
 describe AddMaster, "ゾーンを削除する場合" do
   before :all do
     test_init
@@ -198,7 +178,16 @@ describe AddMaster, "ゾーンを削除する場合" do
     clear_files
     @add_master.delete_zone("example.jp")
   end
+  it "元のゾーンファイルが存在しないこと" do
+    File.should_not be_exist("master/example.jp.zone")
+  end
   it "バックアップファイルが保存されていること" do
-    (File.exist? "master/backup/example.jp.zone").should be_true
+    File.should be_exist("master/backup/example.jp.zone")
+  end
+  it "コンフィグファイルのバックアップが保存されていること" do
+    File.should be_exist("etc/backup/hosting.conf.20110425150015")
+  end
+  it "コンフィグファイルからゾーンの設定を削除できていること" do
+    lambda{ @add_master.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
   end
 end
