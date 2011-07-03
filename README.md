@@ -15,7 +15,7 @@ AddZoneはBINDにゾーンを追加するためのツールです。
 コンフィグファイル
 ---------------
 ファイルパス: /etc/addzone.conf
-
+<pre>
 base:				        ## 基本設定
   conf_file_dir: /var/named/chroot/etc  # コンフィグファイルの存在するディレクトリ
   conf_file_name: hosting.conf	        # 編集するコンフィグファイルの名前
@@ -31,6 +31,7 @@ addmaster:   			       	## マスターゾーンの設定
   zone_dir: /var/named/chroot/var/named/master # ゾーンファイルの配置ディレクトリ
   bind_user: named			# BINDの実行ユーザ ゾーンファイルのパーミッション
   bind_group: named			# BINDの実行グループ ゾーンファイルのパーミッション
+</pre>
 
 addslave:
   master_ip: 192.168.1.1		## スレーブゾーンの設定
