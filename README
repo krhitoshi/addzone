@@ -1,10 +1,21 @@
 
 AddZone
+====
 
 Description
-BINDにゾーンを追加するためのツールです。
+-----------
+AddZoneはBINDにゾーンを追加するためのツールです。
 
-コンフィグファイル: /etc/addzone.conf
+コマンド
+------
+マスターゾーンの追加コマンド: addmaster
+
+スレーブゾーンの追加コマンド: addslave
+
+コンフィグファイル
+---------------
+ファイルパス: /etc/addzone.conf
+
 base:				        ## 基本設定
   conf_file_dir: /var/named/chroot/etc  # コンフィグファイルの存在するディレクトリ
   conf_file_name: hosting.conf	        # 編集するコンフィグファイルの名前
@@ -24,7 +35,3 @@ addmaster:   			       	## マスターゾーンの設定
 addslave:
   master_ip: 192.168.1.1		## スレーブゾーンの設定
   zone_dir: /var/named/chroot/var/named/slave # ゾーンファイルの配置ディレクトリ
-
-マスターゾーンの追加コマンド: addmaster
-
-スレーブゾーンの追加コマンド: addslave
