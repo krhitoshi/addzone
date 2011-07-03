@@ -26,6 +26,9 @@ class AddMaster < AddZone
   def zone_conf(domain)
     zone_header(domain) + "\n" + zone_footer(domain) + "\n"
   end
+  def ip_address=(address)
+    @ip_address = address
+  end
   def zone(domain)
     zone = <<EOS
 $TTL    600

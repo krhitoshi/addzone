@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe AddMaster do
+describe AddMaster, "正常なコンフィグファイルの場合" do
   before do
     @add_master = AddMaster.new('etc/addzone.conf')
   end
@@ -30,7 +30,7 @@ zone "example.com" {
 EOS
     @add_master.zone_conf("example.com").should == conf
   end
-  it "zone contents" do
+  it "ゾーン情報が正しいこと" do
     zone = <<EOS
 $TTL    600
 @       IN SOA ns1.example.com. root.example.com.(
@@ -54,6 +54,40 @@ EOS
   end
 end
 
+describe AddMaster, "IPアドレスを変更した場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_master = AddMaster.new('etc/addzone.conf')
+    @add_master.ip_address = "192.168.100.10"
+  end
+  it "ゾーン情報が正しいこと" do
+    zone = <<EOS
+$TTL    600
+@       IN SOA ns1.example.com. root.example.com.(
+        2011042501  ; Serial
+        10800       ; Refresh
+        3600        ; Retry
+        604800      ; Expire
+        600 )       ; Minimum
+        IN NS    ns1.example.com.
+        IN NS    ns2.example.com.
+        IN TXT   "v=spf1 mx ~all"
+        IN MX 10 mail
+        IN A     192.168.100.10
+www     IN A     192.168.100.10
+mail    IN A     192.168.100.10
+ftp     IN CNAME www
+pop     IN CNAME mail
+smtp    IN CNAME mail
+EOS
+    @add_master.zone("example.com").should == zone
+  end
+end
 describe AddMaster, "パスが間違っているコンフィグファイルの場合" do
   before :all do
     test_init
