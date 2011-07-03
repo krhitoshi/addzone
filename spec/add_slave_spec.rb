@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe AddSlave do
+describe AddSlave, "正常なコンフィグファイルの場合" do
   before :all do
     test_init
   end
@@ -13,7 +13,7 @@ describe AddSlave do
     @add_slave = AddSlave.new("etc/addzone.conf")
   end
   it { @add_slave.master_ip.should == "192.168.1.1" }
-  it "slave zone conf" do
+  it "コンフィグファイルの設定テキストが正しいこと" do
     conf = <<EOS
 // example.com : 20110425150015
 zone "example.com" {
@@ -23,12 +23,11 @@ zone "example.com" {
 };
 
 EOS
-    #puts @add_slave.zone_conf("example.com")
     @add_slave.zone_conf("example.com").should == conf
   end
 end
 
-describe AddSlave, "マスターIPの変更" do
+describe AddSlave, "マスターIPアドレスを変更した場合" do
   before :all do
     test_init
   end
@@ -39,8 +38,10 @@ describe AddSlave, "マスターIPの変更" do
     @add_slave = AddSlave.new("etc/addzone.conf")
     @add_slave.master_ip = "192.168.100.1"
   end
-  it { @add_slave.master_ip.should == "192.168.100.1" }
-  it "slave zone conf" do
+  it "正しく設定されていること" do
+    @add_slave.master_ip.should == "192.168.100.1"
+  end
+  it "コンフィグファイルの設定テキストが正しいこと" do
     conf = <<EOS
 // example.com : 20110425150015
 zone "example.com" {

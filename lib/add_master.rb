@@ -2,15 +2,13 @@
 require 'add_zone'
 
 class AddMaster < AddZone
+  attr_reader :ip_address
+
   def initialize(addzone_conf = nil)
     @bind_user = @bind_group = "named"
     super(addzone_conf)
     raise "host_names should be more than two" unless @host_names.size >= 2
     @spf_include = nil
-  end
-  def condition_check
-    super
-    zone_backup_dir_check
   end
   def create_zone_file(domain)
     zone_dir_check
@@ -85,5 +83,9 @@ EOS
   end
   def serial
     Time.now.strftime("%Y%m%d") + "01"
+  end
+  def condition_check
+    super
+    zone_backup_dir_check
   end
 end

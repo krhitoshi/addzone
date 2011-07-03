@@ -12,6 +12,9 @@ describe AddMaster, "正常なコンフィグファイルの場合" do
   after :all do
     test_end
   end
+  it "IPアドレスが正しいこと" do
+    @add_master.ip_address.should == "192.168.10.5"
+  end
   it "コンフィグファイルへの設定テキストが正しいこと" do
     conf = <<EOS
 // example.com : 20110425150015
@@ -63,6 +66,9 @@ describe AddMaster, "IPアドレスを変更した場合" do
   before do
     @add_master = AddMaster.new('etc/addzone.conf')
     @add_master.ip_address = "192.168.100.10"
+  end
+  it "IPアドレスが正しいこと" do
+    @add_master.ip_address.should == "192.168.100.10"
   end
   it "ゾーン情報が正しいこと" do
     zone = <<EOS
