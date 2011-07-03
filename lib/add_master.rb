@@ -3,7 +3,6 @@ require 'add_zone'
 
 class AddMaster < AddZone
   attr_accessor :spf_include
-  attr_reader :host_names, :email, :ip_address, :bind_user, :bind_group
 
   def initialize(addzone_conf = nil)
     @bind_user = @bind_group = "named"
@@ -21,7 +20,7 @@ class AddMaster < AddZone
     File::open(zone_file_path(domain), "w"){|f|
       f.puts zone(domain)
     }
-    FileUtils.chown bind_user, bind_group, zone_file_path(domain)
+    FileUtils.chown @bind_user, @bind_group, zone_file_path(domain)
     zone_file_path(domain)
   end
   def zone_conf(domain)
@@ -66,7 +65,7 @@ EOS
     "master"
   end
   def zone_SOA
-    "@       IN SOA #{@host_names[0]}. #{email}.("
+    "@       IN SOA #{@host_names[0]}. #{@email}.("
   end
   def zone_NS
     ns_records = []

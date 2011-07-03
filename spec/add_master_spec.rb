@@ -13,11 +13,6 @@ describe AddMaster do
     test_end
   end
 
-  it { @add_master.host_names.should == ["ns1.example.com", "ns2.example.com"] }
-  it { @add_master.ip_address.should == "192.168.10.5" }
-  it { @add_master.bind_user.should == "hitoshi" }
-  it { @add_master.bind_group.should == "staff" }
-  it { @add_master.email.should == "root.example.com" }
   it { @add_master.zone_dir.should == "master" }
   it "spf_include and zone_TXT" do
     @add_master.spf_include.should be_nil
