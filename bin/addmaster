@@ -5,10 +5,16 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'add_master'
 require 'fileutils'
 
-DEBUG = true
-#DEBUG = false
-
-SSH_PORT = 10022
+def check_dns(server, domain)
+  result = `dig @#{server} #{domain} +norec`
+  line = result.grep(/ANSWER: \d+,/)
+  line[0] =~ /ANSWER: (\d+),/
+  if $1 == "0"
+    print "#{@host} NG\n"
+  else
+    print "#{@host} OK\n"
+  end
+end
 
 begin
   if ARGV.size != 2 && ARGV.size != 1
@@ -27,12 +33,10 @@ begin
   add_master.reload
 
   add_master.name_servers[1..-1].each do |server|
-    ssh = "ssh -p #{SSH_PORT} root@#{server} addslave #{domain}"
+    ssh = "ssh #{server['ssh']} root@#{server['name']} addslave #{domain}"
     puts ssh
     puts `#{ssh}`
-    check_dns = "checkdns #{server} #{domain}"
-    puts check_dns
-    puts `#{check_dns}`
+    check_dns(server['name'], domain)
   end
 
 rescue => error

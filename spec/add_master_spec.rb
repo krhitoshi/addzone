@@ -18,7 +18,9 @@ describe AddMaster do
       @add_master.ip_address.should == "192.168.10.5"
     end
     it "ネームサーバが正しいこと" do
-      @add_master.name_servers.should == ["ns1.example.com", "ns2.example.com"]
+      @add_master.name_servers.should == 
+        [{"name"=>"ns1.example.com", "ssh"=>"-p 22 -l root"},
+         {"name"=>"ns2.example.com", "ssh"=>"-p 22 -l root"}]
     end
     it "コンフィグファイルへの設定テキストが正しいこと" do
       conf = <<EOS

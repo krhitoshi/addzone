@@ -61,12 +61,12 @@ EOS
     "master"
   end
   def zone_SOA
-    "@       IN SOA #{@name_servers[0]}. #{@email}.("
+    "@       IN SOA #{@name_servers[0]['name']}. #{@email}.("
   end
   def zone_NS
     ns_records = []
-    @name_servers.each do |name|
-      ns_records << "        IN NS    #{name}."
+    @name_servers.each do |server|
+      ns_records << "        IN NS    #{server['name']}."
     end
     ns_records.join("\n")
   end
