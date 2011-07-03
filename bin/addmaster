@@ -33,11 +33,15 @@ begin
   add_master.reload
 
   add_master.name_servers[1..-1].each do |server|
-    ssh = "ssh #{server['ssh']} root@#{server['name']} addslave #{domain}"
-    puts ssh
-    puts `#{ssh}`
+    if server['ssh']
+      ssh = "ssh #{server['ssh']} root@#{server['name']} addslave #{domain}"
+      puts ssh
+      puts `#{ssh}`
+    end
   end
+  
   sleep 1
+
   add_master.name_servers[1..-1].each do |server|
     check_dns(server['name'], domain)
   end

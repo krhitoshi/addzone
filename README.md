@@ -25,8 +25,10 @@ base:				        ## 基本設定
 addmaster:   			       	## マスターゾーンの設定
   ip_address: 192.168.10.5		# Aレコードに記載されるデフォルトIPアドレス
   name_servers:				# ネームサーバ 2個以上設定してください
-    - ns1.example.com			# ネームサーバ1
-    - ns2.example.com			# ネームサーバ2
+    - name: ns1.example.com		# ネームサーバ1 ホスト名
+      ssh: "-p 22 -l root"		# ネームサーバ1 SSHオプション
+    - name: ns2.example.com		# ネームサーバ1 ホスト名
+      ssh: "-p 22 -l root"		# ネームサーバ1 SSHオプション
   email: root@example.com		# SOAレコードに記載するメールアドレス
   spf: "v=spf1 mx ~all"			# TXTレコードに記載するSPFの設定
   zone_dir: /var/named/chroot/var/named/master # ゾーンファイルの配置ディレクトリ
