@@ -5,6 +5,7 @@ class AddZone
   attr_reader :addzone_conf
 
   class ConfigureError < StandardError; end
+  class NamedCheckConfError < StandardError; end
 
   def initialize(addzone_conf = nil)
     if addzone_conf
@@ -16,6 +17,10 @@ class AddZone
     load_addzone_conf
     @zone_base = type
     condition_check
+  end
+  def named_checkconf
+    res = `named-checkconf #{conf_file_path}`
+    raise NamedCheckConfError, 'named-checkconf failed ' + res if $? != 0
   end
   def delete_zone(domain)
     text = delete_zone_conf(domain)

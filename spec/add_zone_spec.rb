@@ -42,4 +42,22 @@ describe AddZone do
       lambda{ @add_zone = AddZone.new("not_exist.conf") }.should raise_error
     end
   end
+
+  describe AddZone, "正常なコンフィグファイルをチェックする場合" do
+    before do
+      @add_zone = AddZone.new("etc/addzone.conf")
+    end
+    it "エラーは発生しない" do
+      lambda{ @add_zone.named_checkconf }.should_not raise_error
+    end
+  end
+
+  describe AddZone, "異常なコンフィグファイルをチェックする場合" do
+    before do
+      @add_zone = AddZone.new("etc/addzone_wrong.conf")
+    end
+    it "エラーが発生する" do
+      lambda{ @add_zone.named_checkconf }.should raise_error AddZone::NamedCheckConfError
+    end
+  end
 end

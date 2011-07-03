@@ -34,8 +34,12 @@ def prepare_data_files
   File.join(TMP_DIR, "etc", "addzone.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "addzone_not_exist.conf"),
   File.join(TMP_DIR, "etc", "addzone_not_exist.conf"), true
-   FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
+  FileUtils.copy_file File.join(DATA_DIR, "addzone_wrong.conf"),
+  File.join(TMP_DIR, "etc", "addzone_wrong.conf"), true
+  FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   File.join(TMP_DIR, "etc", "hosting.conf"), true
+  FileUtils.copy_file File.join(DATA_DIR, "hosting_wrong.conf"),
+  File.join(TMP_DIR, "etc", "hosting_wrong.conf"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
   File.join(TMP_DIR, "master", "example.jp.zone"), true
   FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
