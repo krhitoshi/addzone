@@ -16,6 +16,7 @@ addmaster:   			       	## マスターゾーンの設定
     - ns1.example.com			# ネームサーバ1
     - ns2.example.com			# ネームサーバ2
   email: root@example.com		# SOAレコードに記載するメールアドレス
+  spf: "v=spf1 mx ~all"			# TXTレコードに記載するSPFの設定
   zone_dir: /var/named/chroot/var/named/master # ゾーンファイルの配置ディレクトリ
   bind_user: named			# BINDの実行ユーザ ゾーンファイルのパーミッション
   bind_group: named			# BINDの実行グループ ゾーンファイルのパーミッション
