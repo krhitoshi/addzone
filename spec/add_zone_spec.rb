@@ -31,11 +31,11 @@ describe AddZone, "When the paths exist" do
   # included tab character
   it { @add_zone.should be_zone_exist("example.info") }
 
-  it { lambda{ @add_zone.zone_check("example.com") }.should_not raise_error }
-  it { lambda{ @add_zone.zone_check("example.jp") }.should raise_error }
+  it { lambda{ @add_zone.add_zone_check("example.com") }.should_not raise_error }
+  it { lambda{ @add_zone.add_zone_check("example.jp") }.should raise_error }
   it "コンフィグファイルからゾーンの設定を削除できる" do
     @add_zone.delete_zone_conf("example.jp")
-    lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error 
+    lambda{ @add_zone.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
   end
 end
 

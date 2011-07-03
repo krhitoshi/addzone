@@ -5,6 +5,8 @@ class AddZone
   attr_accessor :conf_file_name, :zone_base
   attr_reader :addzone_conf, :zone_dir
 
+  class ConfigureError < StandardError; end
+
   def initialize(addzone_conf = nil)
     addzone_conf ? @addzone_conf = addzone_conf : @addzone_conf = "/etc/addzone.conf"
     load_addzone_conf
@@ -22,7 +24,7 @@ class AddZone
   def type
     "base"
   end
-  def zone_check(domain)
+  def add_zone_check(domain)
     conf_file_check
     if zone_exist?(domain)
       raise "Already Registered Zone: " + domain
@@ -31,7 +33,7 @@ class AddZone
   def delete_zone_check(domain)
     conf_file_check
     unless zone_exist?(domain)
-      raise "Not Registered Zone: " + domain
+      raise ConfigureError, "Not Registered Zone: " + domain
     end
   end
   def backup_dir(base)
@@ -65,7 +67,7 @@ class AddZone
     File.exist?(zone_file_path(domain))
   end
   def add_zone_conf(domain)
-    zone_check(domain)
+    add_zone_check(domain)
     open(conf_file_path, "a"){|f|
       f.puts "\n" + zone_conf(domain)
     }
