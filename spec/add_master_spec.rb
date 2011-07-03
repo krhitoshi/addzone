@@ -60,20 +60,16 @@ EOS
   end
 end
 
-describe AddMaster, "when the paths not exist" do
-  before do
-    @add_master = AddMaster.new("etc/addzone_not_exist.conf")
-  end
+describe AddMaster, "パスが間違っているコンフィグファイルの場合" do
   before :all do
     test_init
   end
   after :all do
     test_end
   end
-  it { lambda{ @add_master.condition_check}.should raise_error }
-  it { lambda{ @add_master.create_zone_file("example.com") }.should raise_error }
-  it { lambda{ @add_master.delete_zone_file("example.com") }.should raise_error }
-  it { lambda{ @add_master.add_zone_conf("example.com") }.should raise_error }
+  it "コンストラクタでエラーを発生すること" do
+    lambda{ AddMaster.new("etc/addzone_not_exist.conf") }.should raise_error
+  end
 end
 
 describe AddMaster, "add zone into config operation" do

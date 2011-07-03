@@ -16,10 +16,7 @@ class AddZone
 
     load_addzone_conf
     @zone_base = type
-  end
-  def condition_check
-    conf_file_check
-    conf_backup_dir_check
+    condition_check
   end
   def delete_zone(domain)
     delete_zone_conf(domain)
@@ -205,5 +202,9 @@ EOS
 
 EOS
     footer.chomp
+  end
+  def condition_check
+    conf_file_check
+    conf_backup_dir_check
   end
 end

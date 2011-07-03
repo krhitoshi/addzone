@@ -16,9 +16,6 @@ describe AddZone, "When the paths exist" do
   it { @add_zone.should be_conf_file_dir_exist }
   it { @add_zone.should be_conf_file_exist }
   it { @add_zone.should be_conf_backup_dir_exist }
-
-  it { lambda{ @add_zone.condition_check }.should_not raise_error }
-
   it { lambda{ @add_zone.add_zone_check("example.com") }.should_not raise_error }
   it { lambda{ @add_zone.add_zone_check("example.jp") }.should raise_error AddZone::ConfigureError }
   it "空白の量が違っても認識できる" do
@@ -80,23 +77,9 @@ describe AddZone, "各種存在しないファイルパスが指定されてい�
   after :all do
     test_end
   end
-  before do
-    @add_zone = AddZone.new("etc/addzone_not_exist.conf")
+  it "コンストラクタでエラーを発生すること" do
+    lambda{ AddZone.new("etc/addzone_not_exist.conf") }.should raise_error
   end
-  it { @add_zone.should_not be_conf_file_dir_exist }
-  it { @add_zone.should_not be_conf_file_exist }
-  it { @add_zone.should_not be_conf_backup_dir_exist }
-  it { @add_zone.should_not be_zone_dir_exist }
-  it { @add_zone.should_not be_zone_file_exist("example.com") }
-  it { @add_zone.should_not be_zone_backup_dir_exist }
-  
-  it { lambda{ @add_zone.condition_check}.should raise_error }
-  it { lambda{ @add_zone.conf_file_dir_check}.should raise_error }
-  it { lambda{ @add_zone.conf_file_check }.should raise_error }
-  it { lambda{ @add_zone.conf_backup_dir_check }.should raise_error }
-  
-  it { lambda{ @add_zone.zone_dir_check }.should raise_error }
-  it { lambda{ @add_zone.zone_backup_dir_check }.should raise_error }
 end
 
 describe AddZone, "存在しないコンフィグファイル" do
