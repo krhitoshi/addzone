@@ -27,7 +27,7 @@ class AddZone
   def add_zone_check(domain)
     conf_file_check
     if zone_exist?(domain)
-      raise "Already Registered Zone: " + domain
+      raise ConfigureError, "Already Registered Zone: " + domain
     end
   end
   def delete_zone_check(domain)
