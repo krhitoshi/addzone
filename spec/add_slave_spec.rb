@@ -51,6 +51,20 @@ EOS
     end
   end
 
+  describe AddSlave, "ゾーンを追加する場合" do
+    before do
+      @add_slave = AddSlave.new("etc/addzone.conf")
+      clear_files
+     @add_slave.add_zone("example.com")
+    end
+    it "コンフィグファイルのバックアップが保存されていること" do
+      File.should be_exist("etc/backup/hosting.conf.20110425150015")
+    end
+    it "コンフィグファイルにゾーンの設定があること" do
+      lambda{ @add_slave.add_zone_check("example.com") }.should raise_error AddZone::ConfigureError
+    end
+  end
+
   describe AddSlave, "ゾーンを削除する場合" do
     before do
       @add_slave = AddSlave.new("etc/addzone.conf")
