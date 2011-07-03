@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
@@ -165,3 +166,23 @@ describe AddMaster, "zone creation operation" do
   end
 end
 
+describe AddMaster, "ゾーンファイルをバックアップする場合" do
+  before :all do
+    test_init
+  end
+  after :all do
+    test_end
+  end
+  before do
+    @add_master = AddMaster.new("etc/addzone.conf")
+    clear_files
+    @backup = @add_master.backup_zone_file("example.jp")
+  end
+  it "バックアップファイル名が正しいこと" do
+    @backup.should == "master/backup/example.jp.zone"
+  end
+  it "バックアップファイルが保存されていること" do
+    (File.exist? @backup).should be_true
+  end
+  
+end

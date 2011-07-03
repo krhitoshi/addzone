@@ -50,6 +50,8 @@ def clear_files
   File.delete "etc/hosting.conf" if File.exist?("etc/hosting.conf")
   FileUtils.copy_file File.join(DATA_DIR, "hosting.conf.dist"),
   "etc/hosting.conf", true
+  FileUtils.copy_file File.join(DATA_DIR, "example.jp.zone"),
+  File.join(TMP_DIR, "master", "example.jp.zone"), true
 end
 
 class Time
