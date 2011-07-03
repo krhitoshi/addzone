@@ -12,13 +12,6 @@ describe AddMaster, "正常なコンフィグファイルの場合" do
   after :all do
     test_end
   end
-
-  it "spf_include and zone_TXT" do
-    @add_master.spf_include.should be_nil
-    lambda{ @add_master.spf_include = "spf.example.com" }.should_not raise_error
-
-    @add_master.spf_include.should == "spf.example.com"
-  end
   it "コンフィグファイルへの設定テキストが正しいこと" do
     conf = <<EOS
 // example.com : 20110425150015

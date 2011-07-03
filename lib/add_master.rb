@@ -2,8 +2,6 @@
 require 'add_zone'
 
 class AddMaster < AddZone
-  attr_accessor :spf_include
-
   def initialize(addzone_conf = nil)
     @bind_user = @bind_group = "named"
     super(addzone_conf)
@@ -57,6 +55,7 @@ EOS
     @ip_address = yaml['ip_address']
     @host_names = yaml['name_servers']
     self.email = yaml['email']
+    @spf = yaml['spf']
     @zone_dir = yaml['zone_dir']
     @bind_user = yaml['bind_user']
     @bind_group = yaml['bind_group']
@@ -78,8 +77,8 @@ EOS
     ns_records.join("\n")
   end
   def zone_TXT
-    if @spf_include
-      %Q!        IN TXT   "v=spf1 mx include:#{@spf_include} ~all"!
+    if @spf
+      %Q!        IN TXT   "#{@spf}"!
     else
       %Q!        IN TXT   "v=spf1 mx ~all"!
     end
