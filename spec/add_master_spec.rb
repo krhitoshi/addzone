@@ -17,7 +17,6 @@ describe AddMaster do
   it { @add_master.ip_address.should == "192.168.10.5" }
   it { @add_master.bind_user.should == "hitoshi" }
   it { @add_master.bind_group.should == "staff" }
-  it { @add_master.type.should == "master" }
   it { @add_master.base_zone_file_path("example.com").should == "master/example.com.zone" }
   it { @add_master.email.should == "root.example.com" }
   it { @add_master.serial.should == "2011042501" }

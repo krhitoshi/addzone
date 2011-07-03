@@ -11,9 +11,6 @@ class AddMaster < AddZone
     raise "host_names should be more than two" unless @host_names.size >= 2
     @spf_include = nil
   end
-  def type
-    "master"
-  end
   def condition_check
     super
     zone_backup_dir_check
@@ -84,5 +81,8 @@ EOS
   end
   def email=(address)
     @email = address.gsub(/@/, '.')
+  end
+  def type
+    "master"
   end
 end
