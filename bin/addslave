@@ -23,5 +23,5 @@ begin
   add_slave.rndc_reload
 
 rescue => error
-  puts "ERROR: " + error
+  puts "ERROR: " + error.to_s
 end

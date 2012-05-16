@@ -37,7 +37,7 @@ begin
       puts `#{ssh}`
     end
   end
-  
+
   sleep 1
 
   add_master.name_servers.each do |server|
@@ -45,5 +45,5 @@ begin
   end
 
 rescue => error
-  puts "ERROR: " + error
+  puts "ERROR: " + error.to_s
 end
