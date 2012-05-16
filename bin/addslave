@@ -20,7 +20,7 @@ begin
 
   add_slave.add_zone(domain)
   add_slave.named_checkconf
-  add_slave.rncd_reload
+  add_slave.rndc_reload
 
 rescue => error
   puts "ERROR: " + error
