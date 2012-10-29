@@ -5,7 +5,7 @@ require 'fileutils'
 
 def check_dns(server, domain)
   result = `dig @#{server} #{domain} +norec`
-  line = result.grep(/ANSWER: \d+,/)
+  line = result.lines.grep(/ANSWER: \d+,/)
   line[0] =~ /ANSWER: (\d+),/
   if $1 == "0"
     print "#{server} NG\n"
