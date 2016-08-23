@@ -1,52 +1,50 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
+require 'addzone/master'
 
 zone = ARGV[0]
 if ARGV.size == 0
-  raise "USAGE: #{$0} example.com"
+  abort "USAGE: #{$0} example.com"
 end
 
-class DelMaster
-  CONF_FILE = "/var/named/chroot/etc/named/hosting.conf"
-  CONF_BACKUP_DIR = "/var/named/chroot/etc/named/backup"
-  ZONE_DIR = "/var/named/chroot/var/named/master"
-  ZONE_BACKUP_DIR = "/var/named/chroot/var/named/master/backup"
+class AddZone::DelMaster < AddZone::Master
 
   def initialize(zone)
+    super(AddZone::DEFAULT_ADDZONE_CONF_PATH)
     @zone = zone
   end
   def str_time
     Time.now.strftime("%Y%m%d%H%M%S")
   end
   def rndc_status
-    puts `/usr/sbin/rndc status`
+    puts `rndc status`
     raise 'ERROR: rndc status failed' if $? != 0
   end
   def rndc_reload
-    puts `/usr/sbin/rndc reload`
+    puts `rndc reload`
     raise 'ERROR: rndc reload failed' if $? != 0
   end
   def backup_conf
-    @backup_file = CONF_BACKUP_DIR + "/hosting.conf.#{str_time}"
-    FileUtils.copy_file(CONF_FILE, @backup_file, true)
+    @backup_file = conf_backup_dir + "/#{@conf_file_name}.#{str_time}"
+    FileUtils.copy_file(conf_file_path, @backup_file, true)
   end
   def conf_check
-    puts `/usr/sbin/named-checkconf  -t /var/named/chroot/ /etc/named.conf`
+    puts `named-checkconf -t #{@chroot_dir} /etc/named.conf`
     raise 'ERROR: named-checkconf failed' if $? != 0
   end
   def check_zone
-    open(CONF_FILE) do |f|
+    open(conf_file_path) do |f|
       raise "ERROR: zone #{@zone} not found" if f.grep(/zone "#{@zone}" \{/).empty?
     end
   end
   def backup_zone
-    zone_file = "#{ZONE_DIR}/#{@zone}.zone"
-    FileUtils.mv(zone_file, ZONE_BACKUP_DIR)
+    zone_file = "#{@zone_dir}/#{@zone}.zone"
+    FileUtils.mv(zone_file, zone_backup_dir)
   end
   def delete_from_conf
     flag = false;
-    open(CONF_FILE,"w") do |wf|
+    open(conf_file_path,"w") do |wf|
     open(@backup_file).each do |line|
       if line =~ /\/\/ #{@zone} :/
         flag = true
@@ -66,7 +64,8 @@ class DelMaster
   end
 end
 
-del = DelMaster.new(zone)
+del = AddZone::DelMaster.new(zone)
+
 del.conf_check
 del.check_zone
 del.backup_zone
@@ -79,6 +78,9 @@ del.conf_check
 del.rndc_reload
 del.rndc_status
 
-ns2 = "ssh -p 10022 root@ns2.example.com delslave #{zone}"
-puts ns2
-puts `#{ns2}`
+del.name_servers[1..-1].each do |server|
+  cmd = "ssh -p 10022 root@#{server['name']} delslave #{zone}"
+  puts cmd
+  #puts `#{cmd}`
+end
+
