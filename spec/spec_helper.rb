@@ -1,9 +1,8 @@
 
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require 'add_zone'
-require 'add_master'
-require 'add_slave'
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'addzone'
+require 'addzone/master'
+require 'addzone/slave'
 
 require 'tmpdir'
 
