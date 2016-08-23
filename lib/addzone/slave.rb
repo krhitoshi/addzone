@@ -1,5 +1,5 @@
 
-require 'add_zone'
+require 'addzone/base'
 
 class AddSlave < AddZone
   attr_reader :master_ip

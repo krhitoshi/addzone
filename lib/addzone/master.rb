@@ -1,5 +1,5 @@
 
-require 'add_zone'
+require 'addzone/base'
 
 class AddMaster < AddZone
   attr_reader :ip_address, :name_servers

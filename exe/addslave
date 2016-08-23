@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'add_slave'
+require 'addzone/slave'
 
 begin
   if ARGV.size != 2 && ARGV.size != 1

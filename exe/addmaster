@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'add_master'
+require 'addzone/master'
 require 'fileutils'
 
 def check_dns(server, domain)
