@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+zone = ARGV[0]
+if ARGV.size == 0
+  raise "USAGE: #{$0} example.com"
+end
+
+class DelMaster
+  CONF_FILE = "/var/named/chroot/etc/named/hosting.conf"
+  CONF_BACKUP_DIR = "/var/named/chroot/etc/named/backup"
+  ZONE_DIR = "/var/named/chroot/var/named/master"
+  ZONE_BACKUP_DIR = "/var/named/chroot/var/named/master/backup"
+
+  def initialize(zone)
+    @zone = zone
+  end
+  def str_time
+    Time.now.strftime("%Y%m%d%H%M%S")
+  end
+  def rndc_status
+    puts `/usr/sbin/rndc status`
+    raise 'ERROR: rndc status failed' if $? != 0
+  end
+  def rndc_reload
+    puts `/usr/sbin/rndc reload`
+    raise 'ERROR: rndc reload failed' if $? != 0
+  end
+  def backup_conf
+    @backup_file = CONF_BACKUP_DIR + "/hosting.conf.#{str_time}"
+    FileUtils.copy_file(CONF_FILE, @backup_file, true)
+  end
+  def conf_check
+    puts `/usr/sbin/named-checkconf  -t /var/named/chroot/ /etc/named.conf`
+    raise 'ERROR: named-checkconf failed' if $? != 0
+  end
+  def check_zone
+    open(CONF_FILE) do |f|
+      raise "ERROR: zone #{@zone} not found" if f.grep(/zone "#{@zone}" \{/).empty?
+    end
+  end
+  def backup_zone
+    zone_file = "#{ZONE_DIR}/#{@zone}.zone"
+    FileUtils.mv(zone_file, ZONE_BACKUP_DIR)
+  end
+  def delete_from_conf
+    flag = false;
+    open(CONF_FILE,"w") do |wf|
+    open(@backup_file).each do |line|
+      if line =~ /\/\/ #{@zone} :/
+        flag = true
+      end
+      if !flag && line =~ /zone "#{@zone}" \{/
+        flag = true
+      end
+      if flag && line =~ /\};/ && line !~ /\{/
+        print line
+        flag = false
+        next
+      end
+      print line if flag
+      wf.write line unless flag
+    end
+    end
+  end
+end
+
+del = DelMaster.new(zone)
+del.conf_check
+del.check_zone
+del.backup_zone
+del.backup_conf
+del.rndc_status
+puts "-"*40
+del.delete_from_conf
+puts "-"*40
+del.conf_check
+del.rndc_reload
+del.rndc_status
+
+ns2 = "ssh -p 10022 root@ns2.example.com delslave #{zone}"
+puts ns2
+puts `#{ns2}`
