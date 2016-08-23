@@ -27,7 +27,8 @@ EOS
   def load_addzone_conf
     yaml = super['addslave']
     @master_ip = yaml['master_ip']
-    @zone_dir = yaml['zone_dir']
+    @zone_base = yaml['zone_dir']
+    @zone_dir = File.join [@working_dir, @zone_base]
   end
   def type
     "slave"

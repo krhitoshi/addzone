@@ -15,8 +15,8 @@ class AddZone
       @addzone_conf = "/etc/addzone.conf"
     end
 
-    load_addzone_conf
     @zone_base = type
+    load_addzone_conf
     condition_check
   end
   def self.named_checkconf_exist?
@@ -103,8 +103,10 @@ class AddZone
   def load_addzone_conf
     addzone_conf_check
     yaml = YAML.load_file(@addzone_conf)
-    @conf_file_dir = yaml['base']['conf_file_dir']
+    @chroot_dir     = yaml['base']['chroot_dir']
+    @conf_file_dir  = File.join [@chroot_dir, yaml['base']['conf_file_dir']]
     @conf_file_name = yaml['base']['conf_file_name']
+    @working_dir    = @chroot_dir + yaml['base']['working_dir']
     @zone_dir = type
     yaml
   end

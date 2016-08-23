@@ -50,7 +50,8 @@ EOS
     @name_servers = yaml['name_servers']
     self.email = yaml['email']
     @spf = yaml['spf']
-    @zone_dir = yaml['zone_dir']
+    @zone_base = yaml['zone_dir']
+    @zone_dir = File.join [@working_dir, @zone_base]
     @bind_user = yaml['bind_user']
     @bind_group = yaml['bind_group']
   end
