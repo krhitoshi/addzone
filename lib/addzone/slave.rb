@@ -1,7 +1,7 @@
 
 require 'addzone'
 
-class AddSlave < AddZone::Base
+class AddZone::Slave < AddZone::Base
   attr_reader :master_ip
 
   def initialize(addzone_conf = nil)

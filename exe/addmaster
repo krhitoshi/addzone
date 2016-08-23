@@ -19,7 +19,7 @@ begin
     raise "USAGE: #{$0} example.com [192.168.100.100] \n"
   end
 
-  add_master = AddMaster.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
+  add_master = AddZone::Master.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
   domain  = ARGV[0]
   add_master.ip_address = ARGV[1] if ARGV.size == 2
 
