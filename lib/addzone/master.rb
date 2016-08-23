@@ -1,7 +1,7 @@
 
-require 'addzone/base'
+require 'addzone'
 
-class AddMaster < AddZone
+class AddMaster < AddZone::Base
   attr_reader :ip_address, :name_servers
 
   def initialize(addzone_conf = nil)

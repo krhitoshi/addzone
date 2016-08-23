@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'yaml'
 
-class AddZone
+class AddZone::Base
   attr_reader :addzone_conf
 
   class ConfigureError < StandardError; end

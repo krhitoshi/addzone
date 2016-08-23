@@ -9,7 +9,7 @@ begin
   end
 
   domain = ARGV[0]
-  add_slave = AddSlave.new("/etc/addzone.conf")
+  add_slave = AddSlave.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
 
   if ARGV.size == 2
     add_slave.master_ip = ARGV[1]

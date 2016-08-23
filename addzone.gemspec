@@ -5,7 +5,7 @@ require 'addzone/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "addzone"
-  spec.version       = Addzone::VERSION
+  spec.version       = AddZone::VERSION
   spec.authors       = ["Hitoshi Kurokawa"]
   spec.email         = ["hitoshi@nextseed.jp"]
 
