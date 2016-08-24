@@ -6,7 +6,7 @@ class AddZone::Base
 
   class ConfigureError < StandardError; end
   class NamedCheckConfError < StandardError; end
-  class RNDCReloadError < StandardError; end
+  class RNDCError < StandardError; end
 
   def initialize(addzone_conf = nil)
     if addzone_conf
@@ -28,13 +28,23 @@ class AddZone::Base
     end
   end
   def named_checkconf
-    res = `named-checkconf #{conf_file_path}`
+    cmd = "named-checkconf #{conf_file_path}"
+    puts cmd
+    res = `#{cmd}`
     raise NamedCheckConfError, 'named-checkconf failed ' + res if $? != 0
   end
+
   def rndc_reload
     res = `rndc reload`
-    raise RNDCReloadError, 'rndc reload failed ' + res if $? != 0
+    raise RNDCError, 'rndc reload failed ' + res if $? != 0
   end
+
+  def rndc_status
+    res = `rndc status`
+    puts res
+    raise RNDCError, 'rndc status failed ' + res if $? != 0
+  end
+
   def delete_zone(domain)
     text = delete_zone_conf(domain)
     backup_zone_file(domain)
