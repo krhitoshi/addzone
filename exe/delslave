@@ -14,65 +14,15 @@ class AddZone::DelSlave < AddZone::Slave
     super(AddZone::DEFAULT_ADDZONE_CONF_PATH)
     @zone = zone
   end
-  def str_time
-    Time.now.strftime("%Y%m%d%H%M%S")
-  end
-  def rndc_status
-    puts `rndc status`
-    raise 'ERROR: rndc status failed' if $? != 0
-  end
-  def rndc_reload
-    puts `rndc reload`
-    raise 'ERROR: rndc reload failed' if $? != 0
-  end
-  def backup_conf
-    @backup_file = conf_backup_dir + "/#{@conf_file_path_name}.#{str_time}"
-    FileUtils.copy_file(conf_file_path, @backup_file, true)
-  end
-  def conf_check
-    puts `named-checkconf -t #{@chroot_dir} /etc/named.conf`
-    raise 'ERROR: named-checkconf failed' if $? != 0
-  end
-  def check_zone
-    open(conf_file_path) do |f|
-      raise "ERROR: zone #{@zone} not found" if f.grep(/zone "#{@zone}" \{/).empty?
-    end
-  end
-  def backup_zone
-    zone_file = "#{@zone_dir}/#{@zone}.zone"
-    FileUtils.mv(zone_file, zone_backup_dir)
-  end
-  def delete_from_conf
-    flag = false;
-    open(conf_file_path,"w") do |wf|
-    open(@backup_file).each do |line|
-      if line =~ /\/\/ #{@zone} :/
-        flag = true
-      end
-      if !flag && line =~ /zone "#{@zone}" \{/
-        flag = true
-      end
-      if flag && line =~ /\};/ && line !~ /\{/
-        print line
-        flag = false
-        next
-      end
-      print line if flag
-      wf.write line unless flag
-    end
-    end
-  end
+
 end
 
 del = AddZone::DelSlave.new(zone)
-del.conf_check
-del.check_zone
-del.backup_zone
-del.backup_conf
+del.named_checkconf
 del.rndc_status
 puts "-"*40
-del.delete_from_conf
+puts del.delete_zone(zone)
 puts "-"*40
-del.conf_check
+del.named_checkconf
 del.rndc_reload
 del.rndc_status
