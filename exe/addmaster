@@ -19,11 +19,11 @@ begin
   add_master.named_checkconf
   add_master.rndc_reload
 
-  add_master.name_servers[1..-1].each do |server|
+  add_master.slave_servers.each do |server|
     if server['ssh']
-      ssh = "ssh #{server['ssh']} root@#{server['name']} addslave #{domain}"
-      puts ssh
-      puts `#{ssh}`
+      cmd = "ssh #{server['ssh']} #{server['name']} addslave #{domain}"
+      puts cmd
+      puts `#{cmd}`
     end
   end
 

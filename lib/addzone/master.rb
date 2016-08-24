@@ -43,6 +43,10 @@ EOS
     zone
   end
 
+  def slave_servers
+    @name_servers[1..-1]
+  end
+
   private
   def load_addzone_conf
     yaml = super['addmaster']
@@ -55,6 +59,7 @@ EOS
     @bind_user = yaml['bind_user']
     @bind_group = yaml['bind_group']
   end
+
   def email=(address)
     @email = address.gsub(/@/, '.')
   end

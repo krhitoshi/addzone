@@ -78,8 +78,8 @@ del.conf_check
 del.rndc_reload
 del.rndc_status
 
-del.name_servers[1..-1].each do |server|
-  cmd = "ssh -p 10022 root@#{server['name']} delslave #{zone}"
+del.slave_servers.each do |server|
+  cmd = "ssh -p 10022 #{server['name']} delslave #{zone}"
   puts cmd
   puts `#{cmd}`
 end
