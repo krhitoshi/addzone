@@ -8,16 +8,7 @@ if ARGV.size == 0
   abort "USAGE: #{$0} example.com"
 end
 
-class AddZone::DelSlave < AddZone::Slave
-
-  def initialize(zone)
-    super(AddZone::DEFAULT_ADDZONE_CONF_PATH)
-    @zone = zone
-  end
-
-end
-
-del = AddZone::DelSlave.new(zone)
+del = AddZone::Slave.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
 del.named_checkconf
 del.rndc_status
 puts "-"*40
