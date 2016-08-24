@@ -3,17 +3,6 @@
 require 'addzone/master'
 require 'fileutils'
 
-def check_dns(server, domain)
-  result = `dig @#{server} #{domain} +norec`
-  line = result.lines.grep(/ANSWER: \d+,/)
-  line[0] =~ /ANSWER: (\d+),/
-  if $1 == "0"
-    print "#{server} NG\n"
-  else
-    print "#{server} OK\n"
-  end
-end
-
 begin
   if ARGV.size != 2 && ARGV.size != 1
     raise "USAGE: #{$0} example.com [192.168.100.100] \n"
@@ -41,7 +30,7 @@ begin
   sleep 1
 
   add_master.name_servers.each do |server|
-    check_dns(server['name'], domain)
+    AddZone.check_dns(server['name'], domain)
   end
 
 rescue => error
