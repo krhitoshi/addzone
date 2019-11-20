@@ -9,10 +9,12 @@ begin
   opt = OptionParser.new
   Version = AddZone::VERSION
   opt.on('-m MAIL_SERVER_ADDRESS') { |v| mailserver = v }
+  opt.banner = "Usage: #{opt.program_name} domain_name [ ip_address ]"
   opt.parse!(ARGV)
 
   if ARGV.size != 2 && ARGV.size != 1
-    raise "USAGE: #{$0} example.com [192.168.100.100] \n"
+    puts opt
+    abort
   end
 
   add_master = AddZone::Master.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
