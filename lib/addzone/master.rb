@@ -3,12 +3,14 @@ require 'addzone'
 
 class AddZone::Master < AddZone::Base
   attr_reader :ip_address, :name_servers
+  attr_accessor :mail_server_address
 
   def initialize(addzone_conf = nil)
     @bind_user = @bind_group = "named"
     super(addzone_conf)
     raise "host_names should be more than two" unless @name_servers.size >= 2
     @spf_include = nil
+    @mail_server_address = nil
   end
   def add_zone(domain)
     backup_conf_file
@@ -21,6 +23,11 @@ class AddZone::Master < AddZone::Base
   def ip_address=(address)
     @ip_address = address
   end
+
+  def zone_mail_server_address
+    @mail_server_address || @ip_address
+  end
+
   def zone(domain)
     zone = <<EOS
 $TTL    600
@@ -35,7 +42,7 @@ $TTL    600
         IN MX 10 mail
         IN A     #{@ip_address}
 www     IN A     #{@ip_address}
-mail    IN A     #{@ip_address}
+mail    IN A     #{zone_mail_server_address}
 ftp     IN CNAME www
 pop     IN CNAME mail
 smtp    IN CNAME mail

@@ -2,8 +2,14 @@
 
 require 'addzone/master'
 require 'fileutils'
+require 'optparse'
 
 begin
+  mailserver = nil
+  opt = OptionParser.new
+  opt.on('-m MAIL_SERVER_ADDRESS') { |v| mailserver = v }
+  opt.parse!(ARGV)
+
   if ARGV.size != 2 && ARGV.size != 1
     raise "USAGE: #{$0} example.com [192.168.100.100] \n"
   end
@@ -11,9 +17,11 @@ begin
   add_master = AddZone::Master.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
   domain  = ARGV[0]
   add_master.ip_address = ARGV[1] if ARGV.size == 2
+  add_master.mail_server_address = mailserver if mailserver
 
   puts "Domain   : #{domain}"
   puts "IP Adress: #{add_master.ip_address}"
+  puts "Mail Server Adress: #{add_master.mail_server_address}"if mailserver
 
   add_master.add_zone(domain)
   add_master.named_checkconf
