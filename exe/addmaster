@@ -20,8 +20,8 @@ begin
   add_master.mail_server_address = mailserver if mailserver
 
   puts "Domain   : #{domain}"
-  puts "IP Adress: #{add_master.ip_address}"
-  puts "Mail Server Adress: #{add_master.mail_server_address}"if mailserver
+  puts "IP Address: #{add_master.ip_address}"
+  puts "Mail Server Address: #{add_master.mail_server_address}"if mailserver
 
   add_master.add_zone(domain)
   add_master.named_checkconf
