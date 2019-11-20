@@ -5,10 +5,10 @@ require 'fileutils'
 require 'optparse'
 
 begin
-  mailserver = nil
+  mail_server = nil
   opt = OptionParser.new
   Version = AddZone::VERSION
-  opt.on('-m MAIL_SERVER_ADDRESS') { |v| mailserver = v }
+  opt.on('-m MAIL_SERVER_ADDRESS') { |v| mail_server = v }
   opt.banner = "Usage: #{opt.program_name} domain_name [ ip_address ]"
   opt.parse!(ARGV)
 
@@ -18,24 +18,24 @@ begin
   end
 
   add_master = AddZone::Master.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
-  domain  = ARGV[0]
+  domain = ARGV[0]
   add_master.ip_address = ARGV[1] if ARGV.size == 2
-  add_master.mail_server_address = mailserver if mailserver
+  add_master.mail_server_address = mail_server if mail_server
 
   puts "Domain   : #{domain}"
   puts "IP Address: #{add_master.ip_address}"
-  puts "Mail Server Address: #{add_master.mail_server_address}"if mailserver
+  puts "Mail Server Address: #{add_master.mail_server_address}" if mail_server
 
   add_master.add_zone(domain)
   add_master.named_checkconf
   add_master.rndc_reload
 
   add_master.slave_servers.each do |server|
-    if server['ssh']
-      cmd = "ssh #{server['ssh']} #{server['name']} addslave #{domain}"
-      puts cmd
-      puts `#{cmd}`
-    end
+    next unless server['ssh']
+
+    cmd = "ssh #{server['ssh']} #{server['name']} addslave #{domain}"
+    puts cmd
+    puts `#{cmd}`
   end
 
   sleep 1
@@ -44,6 +44,6 @@ begin
     AddZone.check_dns(server['name'], domain)
   end
 
-rescue => error
-  puts "ERROR: " + error.to_s
+rescue StandardError => e
+  abort "ERROR: #{e}"
 end
