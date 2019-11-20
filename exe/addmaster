@@ -7,6 +7,7 @@ require 'optparse'
 begin
   mailserver = nil
   opt = OptionParser.new
+  Version = AddZone::VERSION
   opt.on('-m MAIL_SERVER_ADDRESS') { |v| mailserver = v }
   opt.parse!(ARGV)
 
