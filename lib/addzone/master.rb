@@ -1,4 +1,3 @@
-
 require 'addzone'
 
 class AddZone::Master < AddZone::Base
@@ -12,14 +11,17 @@ class AddZone::Master < AddZone::Base
     @spf_include = nil
     @mail_server_address = nil
   end
+
   def add_zone(domain)
     backup_conf_file
     add_zone_conf(domain)
     create_zone_file(domain)
   end
+
   def zone_conf(domain)
     zone_header(domain) + "\n" + zone_footer(domain) + "\n"
   end
+
   def ip_address=(address)
     @ip_address = address
   end
@@ -55,6 +57,7 @@ EOS
   end
 
   private
+
   def load_addzone_conf
     yaml = super['addmaster']
     @ip_address = yaml['ip_address']
@@ -70,12 +73,15 @@ EOS
   def email=(address)
     @email = address.gsub(/@/, '.')
   end
+
   def type
     "master"
   end
+
   def zone_SOA
     "@       IN SOA #{@name_servers[0]['name']}. #{@email}.("
   end
+
   def zone_NS
     ns_records = []
     @name_servers.each do |server|
@@ -83,6 +89,7 @@ EOS
     end
     ns_records.join("\n")
   end
+
   def zone_TXT
     if @spf
       %Q!        IN TXT   "#{@spf}"!
@@ -90,13 +97,16 @@ EOS
       %Q!        IN TXT   "v=spf1 mx ~all"!
     end
   end
+
   def serial
     Time.now.strftime("%Y%m%d") + "01"
   end
+
   def condition_check
     super
     zone_backup_dir_check
   end
+
   def create_zone_file(domain)
     zone_dir_check
     raise "Already Exist Zone File: " + zone_file_path(domain) if zone_file_exist?(domain)
