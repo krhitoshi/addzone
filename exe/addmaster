@@ -22,9 +22,9 @@ begin
   add_master.ip_address = ARGV[1] if ARGV.size == 2
   add_master.mail_server_address = mail_server if mail_server
 
-  puts "Domain   : #{domain}"
-  puts "IP Address: #{add_master.ip_address}"
-  puts "Mail Server Address: #{add_master.mail_server_address}" if mail_server
+  puts "Zone Name           : #{domain}"
+  puts "IP Address          : #{add_master.ip_address}"
+  puts "Mail Server Address : #{add_master.mail_server_address}" if mail_server
 
   add_master.add_zone(domain)
   add_master.named_checkconf
