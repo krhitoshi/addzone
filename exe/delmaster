@@ -2,11 +2,19 @@
 
 require 'fileutils'
 require 'addzone/master'
+require 'optparse'
+
+opt = OptionParser.new
+Version = AddZone::VERSION
+opt.banner = "Usage: #{opt.program_name} zone_name"
+opt.parse!(ARGV)
+
+if ARGV.size.zero?
+  puts opt
+  abort
+end
 
 zone = ARGV[0]
-if ARGV.size == 0
-  abort "USAGE: #{$0} example.com"
-end
 
 del = AddZone::Master.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
 del.named_checkconf
