@@ -3,10 +3,11 @@
 require 'fileutils'
 require 'addzone/slave'
 
-zone = ARGV[0]
-if ARGV.size == 0
+if ARGV.size != 1
   abort "USAGE: #{$0} example.com"
 end
+
+zone = ARGV[0]
 
 del = AddZone::Slave.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
 del.named_checkconf

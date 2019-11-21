@@ -9,7 +9,7 @@ Version = AddZone::VERSION
 opt.banner = "Usage: #{opt.program_name} zone_name"
 opt.parse!(ARGV)
 
-if ARGV.size.zero?
+if ARGV.size != 1
   puts opt
   abort
 end
