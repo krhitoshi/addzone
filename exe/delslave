@@ -4,24 +4,29 @@ require 'fileutils'
 require 'addzone/slave'
 require 'optparse'
 
-opt = OptionParser.new
-Version = AddZone::VERSION
-opt.banner = "Usage: #{opt.program_name} zone_name"
-opt.parse!(ARGV)
+begin
+  opt = OptionParser.new
+  Version = AddZone::VERSION
+  opt.banner = "Usage: #{opt.program_name} zone_name"
+  opt.parse!(ARGV)
 
-if ARGV.size != 1
-  puts opt
-  abort
+  if ARGV.size != 1
+    puts opt
+    abort
+  end
+
+  zone = ARGV[0]
+
+  del = AddZone::Slave.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
+  del.named_checkconf
+  del.rndc_status
+  puts "-" * 40
+  puts del.delete_zone(zone)
+  puts "-" * 40
+  del.named_checkconf
+  del.rndc_reload
+  del.rndc_status
+
+rescue StandardError => e
+  abort "ERROR: #{e}"
 end
-
-zone = ARGV[0]
-
-del = AddZone::Slave.new(AddZone::DEFAULT_ADDZONE_CONF_PATH)
-del.named_checkconf
-del.rndc_status
-puts "-"*40
-puts del.delete_zone(zone)
-puts "-"*40
-del.named_checkconf
-del.rndc_reload
-del.rndc_status

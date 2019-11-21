@@ -21,13 +21,13 @@ begin
     add_slave.master_ip = ARGV[1]
   end
 
-  puts "Domain   : #{domain}"
-  puts "Master IP: #{add_slave.master_ip}"
+  puts "Zone Name             : #{domain}"
+  puts "Master Server Address : #{add_slave.master_ip}"
 
   add_slave.add_zone(domain)
   add_slave.named_checkconf
   add_slave.rndc_reload
 
-rescue => error
-  puts "ERROR: " + error.to_s
+rescue StandardError => e
+  puts "ERROR: #{e}"
 end
