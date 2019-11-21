@@ -8,8 +8,8 @@ begin
   mail_server = nil
   opt = OptionParser.new
   Version = AddZone::VERSION
-  opt.on('-m MAIL_SERVER_ADDRESS') { |v| mail_server = v }
-  opt.banner = "Usage: #{opt.program_name} domain_name [ ip_address ]"
+  opt.on("-m mail_server_address") { |v| mail_server = v }
+  opt.banner = "Usage: #{opt.program_name} zone_name [ ip_address ]"
   opt.parse!(ARGV)
 
   if ARGV.size != 2 && ARGV.size != 1
