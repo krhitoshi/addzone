@@ -1,5 +1,8 @@
 base:
-  conf_file_dir: /var/named/chroot/etc
+#  chroot_dir: /
+  chroot_dir: /var/named/chroot
+  working_dir: /var/named
+  conf_file_dir: /etc/named
   conf_file_name: hosting.conf
 
 addmaster:
@@ -10,10 +13,11 @@ addmaster:
     - name: ns1.example.com
       ssh: "-p 22 -l root"
   email: root@example.com
-  zone_dir: /var/named/chroot/var/named/master
+  spf: "v=spf1 mx ~all"
+  zone_dir: master
   bind_user: named
   bind_group: named
 
 addslave:
   master_ip: 192.168.1.1
-  zone_dir: /var/named/chroot/var/named/slave
+  zone_dir: slave
