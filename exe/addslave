@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 
 require 'addzone/slave'
+require 'optparse'
 
 begin
+  opt = OptionParser.new
+  Version = AddZone::VERSION
+  opt.banner = "Usage: #{opt.program_name} zone_name [ ip_address ]"
+  opt.parse!(ARGV)
+
   if ARGV.size != 2 && ARGV.size != 1
-    print "USAGE: #{$0} example.com [192.168.1.1] \n"
-    exit
+    puts opt
+    abort
   end
 
   domain = ARGV[0]

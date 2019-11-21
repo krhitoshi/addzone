@@ -2,9 +2,16 @@
 
 require 'fileutils'
 require 'addzone/slave'
+require 'optparse'
+
+opt = OptionParser.new
+Version = AddZone::VERSION
+opt.banner = "Usage: #{opt.program_name} zone_name"
+opt.parse!(ARGV)
 
 if ARGV.size != 1
-  abort "USAGE: #{$0} example.com"
+  puts opt
+  abort
 end
 
 zone = ARGV[0]
