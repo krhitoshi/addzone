@@ -26,7 +26,7 @@ base:                           ## 基本設定
 
 addmaster:                      ## マスターゾーンの設定
   ip_address: 192.168.10.5      # Aレコードに記載されるデフォルトIPアドレス
-  name_servers:				          # ネームサーバ 2個以上設定してください
+  name_servers:                 # ネームサーバ 2個以上設定してください
     - name: ns1.example.com     # ネームサーバ1 ホスト名
       ssh: "-p 22 -l root"      # ネームサーバ1 SSHオプション
     - name: ns2.example.com     # ネームサーバ2 ホスト名
