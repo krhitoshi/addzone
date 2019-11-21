@@ -2,7 +2,7 @@
 
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe AddSlave do
+describe AddZone::Slave do
   before :all do
     test_init
   end
@@ -10,9 +10,9 @@ describe AddSlave do
     test_end
   end
 
-  describe AddSlave, "正常なコンフィグファイルの場合" do
+  describe AddZone::Slave, "正常なコンフィグファイルの場合" do
     before do
-      @add_slave = AddSlave.new("etc/addzone.conf")
+      @add_slave = AddZone::Slave.new("etc/addzone.conf")
     end
     it { @add_slave.master_ip.should == "192.168.1.1" }
     it "コンフィグファイルの設定テキストが正しいこと" do
@@ -29,9 +29,9 @@ EOS
     end
   end
 
-  describe AddSlave, "マスターIPアドレスを変更した場合" do
+  describe AddZone::Slave, "マスターIPアドレスを変更した場合" do
     before do
-      @add_slave = AddSlave.new("etc/addzone.conf")
+      @add_slave = AddZone::Slave.new("etc/addzone.conf")
       @add_slave.master_ip = "192.168.100.1"
     end
     it "正しく設定されていること" do
@@ -51,9 +51,9 @@ EOS
     end
   end
 
-  describe AddSlave, "ゾーンを追加する場合" do
+  describe AddZone::Slave, "ゾーンを追加する場合" do
     before do
-      @add_slave = AddSlave.new("etc/addzone.conf")
+      @add_slave = AddZone::Slave.new("etc/addzone.conf")
       clear_files
      @add_slave.add_zone("example.com")
     end
@@ -61,13 +61,13 @@ EOS
       File.should be_exist("etc/backup/hosting.conf.20110425150015")
     end
     it "コンフィグファイルにゾーンの設定があること" do
-      lambda{ @add_slave.add_zone_check("example.com") }.should raise_error AddZone::ConfigureError
+      lambda{ @add_slave.add_zone_check("example.com") }.should raise_error AddZone::Base::ConfigureError
     end
   end
 
-  describe AddSlave, "ゾーンを削除する場合" do
+  describe AddZone::Slave, "ゾーンを削除する場合" do
     before do
-      @add_slave = AddSlave.new("etc/addzone.conf")
+      @add_slave = AddZone::Slave.new("etc/addzone.conf")
       clear_files
       @add_slave.delete_zone("example.jp")
     end
@@ -81,7 +81,7 @@ EOS
       File.should be_exist("etc/backup/hosting.conf.20110425150015")
     end
     it "コンフィグファイルからゾーンの設定を削除できていること" do
-      lambda{ @add_slave.delete_zone_check("example.jp") }.should raise_error AddZone::ConfigureError
+      lambda{ @add_slave.delete_zone_check("example.jp") }.should raise_error AddZone::Base::ConfigureError
     end
   end
 end
