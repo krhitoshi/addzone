@@ -46,10 +46,6 @@ describe AddZone::Base do
     describe AddZone::Base, "設定を反映させるためにBINDをリロードできる" do
     before do
       @add_zone = AddZone::Base.new("etc/addzone.conf")
-      class AddZone::Base
-        def rndc_reload
-        end
-      end
     end
     it "エラーは発生しない" do
       lambda{ @add_zone.rndc_reload }.should_not raise_error
