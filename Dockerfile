@@ -22,13 +22,23 @@ WORKDIR /usr/src/app
 
 RUN gem install bundler
 
-COPY . .
-
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1
 
+RUN mkdir -p lib/addzone/
+
+COPY Gemfile Gemfile.lock addzone.gemspec ./
+COPY lib/addzone/version.rb lib/addzone/version.rb
+
 RUN bundle install
+
+COPY . .
+
+CMD /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
 
 # run specs with docker container
 # docker build -t addzone .
+# docker run
+
+# docker run -it addzone /bin/bash
 # docker run addzone /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
