@@ -1,0 +1,5 @@
+.git
+.env
+docker-compose.*
+Dockerfile
+Gemfile.lock
