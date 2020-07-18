@@ -1,33 +1,23 @@
-FROM centos:centos7
+FROM centos:8
 
-RUN yum install -y \
-    git wget make gcc zlib-devel openssl-devel sqlite sqlite-devel mysql-devel \
-    readline-devel libffi-devel libxml2-devel libxslt-devel
-
-RUN wget https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.9.tar.gz
-RUN tar zxvf ruby-2.4.9.tar.gz
-WORKDIR ruby-2.4.9
-RUN ./configure
-RUN make
-RUN make install
-
-RUN yum install -y bind which
+RUN dnf -y module enable ruby:2.6 \
+    && dnf -y install \
+    ruby ruby-devel git \
+    bind which \
+    && dnf clean all
 
 RUN rndc-confgen -a -r /dev/urandom
 RUN chown named. /etc/rndc.key
 RUN echo 'include "/etc/rndc.key";' >> /etc/named.conf
 RUN echo 'controls { inet 127.0.0.1 allow { localhost; } keys { rndc-key; }; };' >> /etc/named.conf
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 RUN gem install bundler
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
-
 RUN mkdir -p lib/addzone/
 
-COPY Gemfile Gemfile.lock addzone.gemspec ./
+COPY Gemfile addzone.gemspec ./
 COPY lib/addzone/version.rb lib/addzone/version.rb
 
 RUN bundle install
@@ -40,5 +30,5 @@ CMD /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
 # docker build -t addzone .
 # docker run
 
-# docker run -it addzone /bin/bash
-# docker run addzone /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
+# docker run --rm -it addzone /bin/bash
+# docker run --rm  addzone /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
