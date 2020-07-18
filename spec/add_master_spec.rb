@@ -147,8 +147,9 @@ EOS
       clear_files
       @text = @add_master.delete_zone("example.net")
     end
+
     it "削除したコンフィグファイルのテキストの最後には空白行が含まれないこと" do
-      (@text.split('\n').last =~ /^\s*$/).should be_false
+      expect(@text.split("\n").last).not_to match /^\s*$/
     end
   end
 end
