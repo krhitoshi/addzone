@@ -24,7 +24,7 @@ RUN bundle install
 
 COPY . .
 
-CMD /bin/bash -c '/usr/sbin/named -u named && bundle exec rake'
+CMD ["/usr/sbin/named", "-g", "-u", "named"]
 
 # run specs with docker container
 # docker build -t addzone .
