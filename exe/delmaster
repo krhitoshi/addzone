@@ -28,7 +28,13 @@ begin
   del.rndc_status
 
   del.slave_servers.each do |server|
-    cmd = "ssh -p 10022 #{server['name']} delslave #{zone}"
+    sudo_str = if server['sudo']
+                 "sudo"
+               else
+                 ""
+               end
+
+    cmd = "ssh #{server['ssh']} #{server['name']} #{sudo_str} delslave #{zone}"
     puts cmd
     puts `#{cmd}`
   end
