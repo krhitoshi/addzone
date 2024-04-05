@@ -1,6 +1,6 @@
 FROM rockylinux:8
 
-RUN dnf -y module enable ruby:2.6 \
+RUN dnf -y module enable ruby:3.1 \
     && dnf -y install \
     ruby ruby-devel rubygem-bundler git \
     bind which \
