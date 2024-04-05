@@ -31,7 +31,8 @@ addmaster:                      ## マスターゾーンの設定
     - name: ns1.example.com     # ネームサーバ1 ホスト名
       ssh: "-p 22 -l root"      # ネームサーバ1 SSHオプション
     - name: ns2.example.com     # ネームサーバ2 ホスト名
-      ssh: "-p 22 -l root"      # ネームサーバ2 SSHオプション
+      ssh: "-p 22 -l root -t"   # ネームサーバ2 SSHオプション
+      sudo: true                # ネームサーバ2 コマンド実行時に sudo を使うオプション
   email: root@example.com       # SOAレコードに記載するメールアドレス
   spf: "v=spf1 mx ~all"         # TXTレコードに記載するSPFの設定
   zone_dir: master              # ゾーンファイルの配置ディレクトリ
