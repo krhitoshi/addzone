@@ -17,7 +17,8 @@ AddZoneはBINDにゾーンを追加するためのツールです。
 ファイルパス: /etc/addzone.conf
 
 ネームサーバの1つ目をマスターサーバとし、2つ目以降のネームサーバをスレーブサーバとして認識します。
-<pre>
+
+```
 base:                           ## 基本設定
   chroot_dir: /var/named/chroot # chrootディレクトリ
   working_dir: /var/named       # workingディレクトリ
@@ -40,4 +41,4 @@ addmaster:                      ## マスターゾーンの設定
 addslave:
   master_ip: 192.168.1.1        ## スレーブゾーンの設定
   zone_dir: slave               # ゾーンファイルの配置ディレクトリ
-</pre>
+```
