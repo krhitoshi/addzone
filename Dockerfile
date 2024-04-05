@@ -1,8 +1,8 @@
-FROM centos:8
+FROM rockylinux:8
 
 RUN dnf -y module enable ruby:2.6 \
     && dnf -y install \
-    ruby ruby-devel git \
+    ruby ruby-devel rubygem-bundler git \
     bind which \
     && dnf clean all
 
@@ -13,7 +13,7 @@ RUN echo 'controls { inet 127.0.0.1 allow { localhost; } keys { rndc-key; }; };'
 
 WORKDIR /app
 
-RUN gem install bundler
+#RUN gem install bundler
 
 RUN mkdir -p lib/addzone/
 
